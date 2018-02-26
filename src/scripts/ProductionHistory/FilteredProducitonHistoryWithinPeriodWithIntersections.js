@@ -32,7 +32,8 @@ FilteredProducitonHistoryWithinPeriodWithIntersections.prototype.getFilteredItem
 				start: inter.start,
 				end: inter.end,
 				group: "Intersections",
-				duration: (interEnd - interStart) / 1000
+				duration: (interEnd - interStart) / 1000,
+				className: 'intersection'
 			});
 
 
@@ -70,7 +71,7 @@ FilteredProducitonHistoryWithinPeriodWithIntersections.prototype.getFilteredItem
 				}
 			});
 
-			
+
 			items.forEach(function (item) {
 				if (item.eventType == 'PUTimeScrapped') {
 					var puTime = new Date(Date.parse(item.start));

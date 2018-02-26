@@ -42,7 +42,8 @@ function buildOrders(content) {
             tags: {
                 orderNumber: 'test',
                 articleNumber: 'ddss'
-            }
+            },
+            className: 'order'
         });
     });
     return orders;
@@ -64,7 +65,8 @@ function buildOrderBatches(content) {
                 orderId: 123,
                 orderNumber: 'test',
                 articleNumber: 'ddss'
-            }
+            },
+            className: 'orderbatch'
         });
     });
     return orderBatches;
@@ -85,7 +87,8 @@ function buildStops(content) {
             + "Stops",
             tags: {
                 type: getTypeName(content, stop.type)
-            }
+            },
+            className: 'stop'
         });
     });
     return stops;
@@ -105,7 +108,8 @@ function buildShifts(content) {
             + "Shifts",
             tags: {
                 teamId: 2
-            }
+            },
+            className: 'shift'
         });
     });
     return shifts;
