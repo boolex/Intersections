@@ -21,6 +21,8 @@
 	<script type="text/javascript" src="scripts/framework/HtmlTree.js"></script>
 	<script type="text/javascript" src="scripts/framework/SelectableHtmlTree.js"></script>
 
+	<script type="text/javascript" src="scripts/Windows/Header/HeaderPanel.js"></script>
+
 	<script type="text/javascript" src="scripts/ProductionHistory/ProductionHistory.js"></script>
 	<script type="text/javascript" src="scripts/ProductionHistory/ProductionHistoryWithinPeriod.js"></script>
 	<script type="text/javascript" src="scripts/ProductionHistory/FilteredProducitonHistoryWithinPeriodWithIntersections.js"></script>
@@ -55,7 +57,7 @@
 <body>
 	<div id="log"></div>
 
-
+	<div id="header"></div>
 
 	<div id="visualization"></div>
 	<table>
@@ -89,6 +91,12 @@
 			{ "content": "articleNumbers", children: [{ content: "test1" }, { content: "test2" }, { content: "test3" }] },
 			{ "content": "orderNumbers", children: [{ content: "test1" }, { content: "test2" }, { content: "test3" }] }
 		];
+		window.header =
+			new HeaderPanel(
+				document.getElementById("header"),
+				null
+			).render();
+
 		window.fileExplorer =
 			new FileExplorerWindow(
 				document.getElementById("fileExplorer"),
@@ -126,18 +134,21 @@
 					actions['history'] = true;
 					actions['statistics'] = true;
 					actions['update_timeline'] = true;
+					actions['update_header'] = true;
 				}
 				if (options != null && options.range != null) {
 					app.setContext('range', options.range);
 					actions['history'] = true;
 					actions['statistics'] = true;
 					actions['update_timeline'] = true;
+					actions['update_header'] = true;
 				}
 				if (options != null && options.selectedGroups != null) {
 					app.setContext('selectedGroups', options.selectedGroups);
 					actions['history'] = true;
 					actions['statistics'] = true;
 					actions['update_timeline'] = true;
+					actions['update_header'] = true;
 				}
 				if (options != null && options.content != null) {
 					app.setContext('content', options.content);
@@ -145,6 +156,7 @@
 					actions['statistics'] = true;
 					actions['draw_timeline'] = true;
 					actions['draw_filter_tree'] = true;
+					actions['update_header'] = true;
 				}
 				if (actions['file']) {
 					app.getContextOption('file').load(function (content) {
@@ -190,6 +202,9 @@
 							return x["content"]
 						});
 				}
+				if (actions['update_header']) {
+					window.header.update(app);
+				}
 			},
 			display: function () {
 				try {
@@ -211,6 +226,22 @@
 			).render();
 	</script>
 	<style>
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		#header {
+			height: 80px;
+			background-color: #AFDBD0;
+			padding: 10px;
+		}
+
+		#visualization {
+			padding: 20px;
+		}
+
 		.year {
 			border: 1px solid black;
 			width: 80px;
@@ -261,6 +292,7 @@
 		#rangeTo {
 			display: block;
 		}
+
 		#fromContainer,
 		#toContainer {
 			display: inline-block;
