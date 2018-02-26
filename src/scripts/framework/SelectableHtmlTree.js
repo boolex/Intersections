@@ -7,15 +7,17 @@ SelectableHtmlTree.prototype = Object.create(HtmlTree.prototype);
 
 SelectableHtmlTree.prototype.drawNode = function (node, text) {
     var container = document.createElement("div");
-    var cb = document.createElement("input");
-    cb.type = "checkbox";
-    container.appendChild(cb);
-    cb.classList.add("group");
-    cb.setAttribute("group", node.getHashCode());
-    var self = this;
-    cb.onchange = function () {
-        self.selectedGroupsChanged();
-    };
+    if (node.type != 'group') {
+        var cb = document.createElement("input");
+        cb.type = "checkbox";
+        container.appendChild(cb);
+        cb.classList.add("group");
+        cb.setAttribute("group", node.getHashCode());
+        var self = this;
+        cb.onchange = function () {
+            self.selectedGroupsChanged();
+        };
+    }
     var label = document.createElement("label");
     label.innerHTML = text;
 
