@@ -24,6 +24,8 @@ StatisticsWindow.prototype.renderTableRow = function (caption, value) {
 StatisticsWindow.prototype.renderTableContent = function (statistics) {
     this.renderTableRow("Intersection time", statistics.getTotalInstersectionTime());
     this.renderTableRow("PUTimeEnd",statistics.getTotalPuTimeEnd());
+    this.renderTableRow("PUTimeStart",statistics.getTotalPuTimeStart());
+    this.renderTableRow("PUTimeScrapped",statistics.getTotalPuTimeScrapped());
 }
 StatisticsWindow.prototype.renderTable = function () {
     var table = document.createElement("table");

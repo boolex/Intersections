@@ -114,7 +114,7 @@ function buildProducedUnits(content) {
     var units = [];
     getProducedUnits(content).forEach(function (unit, index, array) {
         units.push({
-            id: unit.time,
+            id: unit.type + "_" + unit.time,
             title: "<b>Order_Id:</b> " + unit.order.id + "<br/><b>Time:</b> " + unit.time,
             content: "Amount: " + unit.amount.toString(),
             start: unit.time,
@@ -122,9 +122,9 @@ function buildProducedUnits(content) {
             group: "S" + unit.site.id
             + "D" + unit.department.id
             + "O" + unit.operatorstation.id
-            + "Units",
+            + "Units" + unit.type,
             type: "point",
-            eventType: "PUTimeEnd",
+            eventType: unit.type,
             amount: unit.amount,
             tags: {
                 orderId: 123,

@@ -52,6 +52,41 @@ FilteredProducitonHistoryWithinPeriodWithIntersections.prototype.getFilteredItem
 					}
 				}
 			});
+
+			items.forEach(function (item) {
+				if (item.eventType == 'PUTimeStart') {
+					var puTime = new Date(Date.parse(item.start));
+					if (puTime >= interStart && puTime <= interEnd) {
+						items.push({
+							id: "PUTimeStartWithinIntersections_" + item.start,
+							content: item.start,
+							title: item.start,
+							start: item.start,
+							end: item.start,
+							amount: item.amount,
+							group: "PUTimeStartWithinIntersections"
+						});
+					}
+				}
+			});
+
+			
+			items.forEach(function (item) {
+				if (item.eventType == 'PUTimeScrapped') {
+					var puTime = new Date(Date.parse(item.start));
+					if (puTime >= interStart && puTime <= interEnd) {
+						items.push({
+							id: "PUTimeScrappedWithinIntersections_" + item.start,
+							content: item.start,
+							title: item.start,
+							start: item.start,
+							end: item.start,
+							amount: item.amount,
+							group: "PUTimeScrappedWithinIntersections"
+						});
+					}
+				}
+			});
 		});
 	}
 

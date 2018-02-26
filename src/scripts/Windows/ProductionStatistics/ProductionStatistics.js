@@ -23,3 +23,21 @@ ProductionStatistics.prototype.getTotalPuTimeEnd = function () {
     });
     return amount;
 }
+ProductionStatistics.prototype.getTotalPuTimeStart = function () {
+    var amount = 0;
+    this.history.forEach(function (item) {
+        if (item.group == 'PUTimeStartWithinIntersections') {
+            amount += item.amount || 1;
+        }
+    });
+    return amount;
+}
+ProductionStatistics.prototype.getTotalPuTimeScrapped = function () {
+    var amount = 0;
+    this.history.forEach(function (item) {
+        if (item.group == 'PUTimeScrappedWithinIntersections') {
+            amount += item.amount || 1;
+        }
+    });
+    return amount;
+}

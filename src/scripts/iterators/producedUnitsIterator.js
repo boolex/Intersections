@@ -9,6 +9,23 @@ var getProducedUnits = function (content) {
 						unit.department = department;
 						unit.site = site;
 						unit.order = order;
+						unit.type='PUTimeEnd';
+						units.push(unit);
+					});
+					order.scrappedUnits.forEach(function (unit, index, array) {
+						unit.operatorstation = operatorstation;
+						unit.department = department;
+						unit.site = site;
+						unit.order = order;
+						unit.type='PUTimeScrapped';
+						units.push(unit);
+					});
+					order.startedUnits.forEach(function (unit, index, array) {
+						unit.operatorstation = operatorstation;
+						unit.department = department;
+						unit.site = site;
+						unit.order = order;
+						unit.type='PUTimeStart';
 						units.push(unit);
 					});
 				});
