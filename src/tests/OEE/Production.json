@@ -12,18 +12,50 @@
                     "operatorstations": [
                         {
                             "id": 1,
+                            "qualityGoal": 80.0,
+                            "performanceGoal": 92.7,
                             "prodplaces": [
                                 {
                                     "id": 1,
                                     "name": "prodplace7",
+                                    "oeeGoal": 75.5,
+                                    "availabilityGoal": 89.3,
                                     "sortorderno": 1,
                                     "stops": [
                                         {
                                             "from": "2017-01-01 12:30:10",
-                                            "to": "2017-01-01 14:30",
+                                            "to": "2017-01-01 12:47",
                                             "id": 1,
                                             "type": 2,
-                                            "downtime": 120.0
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:49",
+                                            "to": "2017-01-01 13:15",
+                                            "id": 2,
+                                            "type": 3,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 14:50",
+                                            "to": "2017-01-01 15:36",
+                                            "id": 3,
+                                            "type": 4,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 15:38",
+                                            "to": "2017-01-01 15:42",
+                                            "id": 4,
+                                            "type": 5,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 15:42",
+                                            "to": "2017-01-01 15:57",
+                                            "id": 5,
+                                            "type": 6,
+                                            "downtime": 0
                                         }
                                     ]
                                 }
@@ -48,16 +80,32 @@
                                             "time": "2017-01-01 11:25"
                                         },
                                         {
+                                            "amount": 100,
+                                            "time": "2017-01-01 11:30"
+                                        },
+                                        {
                                             "amount": 10,
                                             "time": "2017-01-01 12:35"
+                                        },
+                                        {
+                                            "amount": 200,
+                                            "time": "2017-01-01 12:40"
                                         },
                                         {
                                             "amount": 10,
                                             "time": "2017-01-01 13:25"
                                         },
                                         {
+                                            "amount": 200,
+                                            "time": "2017-01-01 13:30"
+                                        },
+                                        {
                                             "amount": 10,
                                             "time": "2017-01-01 13:35"
+                                        },
+                                        {
+                                            "amount": 400,
+                                            "time": "2017-01-01 13:40"
                                         }
                                     ],
                                     "startedUnits": [
@@ -118,6 +166,10 @@
                                 {
                                     "changeType": -1,
                                     "changeDate": "2017-01-02 15:30"
+                                },
+                                {
+                                    "changeType": 1,
+                                    "changeDate": "2017-01-02 16:30"
                                 }
                             ]
                         }
@@ -150,7 +202,7 @@
         },
         {
             "id": 6,
-            "group": 12,
+            "group": 13,
             "name": "system"
         }
     ]

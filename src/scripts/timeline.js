@@ -43,7 +43,7 @@ Timeline.prototype.getGroups = function (items) {
 
     return groups;
 }
-TimeLine.dependencies = [];
-TimeLine.push("vis.TimeLine");
-TimeLine.push("vis.DataSet");
-TimeLine.push("Filter");
+Timeline.dependencies = [];
+Timeline.dependencies.push("vis.TimeLine");
+Timeline.dependencies.push("vis.DataSet");
+Timeline.dependencies.push("Filter");

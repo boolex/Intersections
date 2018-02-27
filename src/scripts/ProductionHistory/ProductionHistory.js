@@ -41,7 +41,7 @@ function buildOrders(content) {
             + "Orders",
             tags: {
                 orderNumber: 'test',
-                articleNumber: 'ddss'
+                articleNumber: order.articleNumber
             },
             className: 'order'
         });
@@ -64,7 +64,7 @@ function buildOrderBatches(content) {
             tags: {
                 orderId: 123,
                 orderNumber: 'test',
-                articleNumber: 'ddss'
+                articleNumber: orderBatch.order.articleNumber
             },
             className: 'orderbatch'
         });
@@ -107,12 +107,25 @@ function buildShifts(content) {
             + "O" + shift.operatorstation.id
             + "Shifts",
             tags: {
-                teamId: 2
+                name : getTeamName(content,shift.changeType)
             },
             className: 'shift'
         });
     });
     return shifts;
+}
+function getTeamName(content, number){
+	if(content!=null && content.teams!=null){
+		for(var i = 0;i<content.teams.length;i++){
+			if(content.teams[i].number == number){
+				return content.teams[i].name;
+			}
+		}
+		return 'unknown';
+	}
+	else{
+		return "unknown";
+	}
 }
 function buildProducedUnits(content) {
     var units = [];

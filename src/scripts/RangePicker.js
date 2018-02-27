@@ -48,4 +48,4 @@ RangePicker.prototype.selectionChanged = function () {
 }
 
 RangePicker.dependencies = [];
-RangePicker.push("AnyTime_picker")
+RangePicker.dependencies.push("AnyTime_picker")
