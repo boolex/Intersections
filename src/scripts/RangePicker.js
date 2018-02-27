@@ -46,3 +46,6 @@ RangePicker.prototype.selectionChanged = function () {
         this.onchange(this.get());
     }
 }
+
+RangePicker.dependencies = [];
+RangePicker.push("AnyTime_picker")
