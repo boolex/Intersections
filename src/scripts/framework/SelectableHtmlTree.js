@@ -1,5 +1,6 @@
-var SelectableHtmlTree = function (data, nodesPropertyName, onchange) {
+var SelectableHtmlTree = function (data, nodesPropertyName, onchange, initialSelection) {
     this.onchange = onchange;
+    this.initialSelection = initialSelection;
     HtmlTree.apply(this, arguments);
 }
 
@@ -13,6 +14,10 @@ SelectableHtmlTree.prototype.drawNode = function (node, text) {
         container.appendChild(cb);
         cb.classList.add("group");
         cb.setAttribute("group", node.getHashCode());
+        var path = this.getItemFullPathByHashCode(node.getHashCode());
+        if (this.initialSelection != null && this.initialSelection.indexOf(path) >= 0) {
+            cb.checked = true;
+        }
         var self = this;
         cb.onchange = function () {
             self.selectedGroupsChanged();

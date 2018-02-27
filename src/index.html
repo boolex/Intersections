@@ -179,7 +179,7 @@
 						new FilteredProducitonHistoryWithinPeriodWithIntersections(
 							app.getContextOption('content'),
 							app.getContextOption('range'),
-							app.getContextOption('selectedGroups')
+							app.getContextOption('selectedGroups') || window.page.getParameter('groups').split(';')
 						);
 				}
 				if (actions['statistics']) {
@@ -206,7 +206,8 @@
 						"children",
 						function (selectedGroups) {
 							app.update({ selectedGroups: selectedGroups });
-						}
+						},
+						window.page.getParameter('groups').split(';')
 					).draw(
 						document.getElementById("groups"),
 						function (x) {
