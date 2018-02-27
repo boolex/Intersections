@@ -17,6 +17,8 @@
 
 	<script type="text/javascript" src="scripts/RangePicker.js"></script>
 
+	<script type="text/javascript" src="scripts/framework/Page.js"></script>
+
 	<script type="text/javascript" src="scripts/framework/Tree.js"></script>
 	<script type="text/javascript" src="scripts/framework/HtmlTree.js"></script>
 	<script type="text/javascript" src="scripts/framework/SelectableHtmlTree.js"></script>
@@ -91,6 +93,7 @@
 			{ "content": "articleNumbers", children: [{ content: "test1" }, { content: "test2" }, { content: "test3" }] },
 			{ "content": "orderNumbers", children: [{ content: "test1" }, { content: "test2" }, { content: "test3" }] }
 		];
+		window.page = new Page(window);
 		window.header =
 			new HeaderPanel(
 				document.getElementById("header"),
@@ -113,8 +116,16 @@
 		window.app = new App({
 			context: {
 				range: {
-					from: new Date(Date.parse('2017-01-01T12:24:00')),
-					to: new Date(Date.parse('2017-01-01T17:30:00'))
+					from: new Date(
+						Date.parse(
+							window.page.getParameter('from') || '2017-01-01T12:24:00'
+						)
+					),
+					to: new Date(
+						Date.parse(
+							window.page.getParameter('to') || '2017-01-01T17:30:00'
+						)
+					)
 				}
 			},
 			initialize: function () {
@@ -209,7 +220,8 @@
 			display: function () {
 				try {
 					var app = this.app;
-					app.update({ file: new File('tests/Stops/Production.json') });
+					var filePath = window.page.getParameter('file') || 'tests/Stops/Production.json';
+					app.update({ file: new File(filePath) });
 				}
 				catch (e) {
 					//log(e);
@@ -316,10 +328,12 @@
 			border-color: #840025;
 			border-width: 2px;
 		}
-		.vis-item.orderbatch{
+
+		.vis-item.orderbatch {
 			background-color: #9edcef;
 		}
-		.vis-item.order{
+
+		.vis-item.order {
 			background-color: #dee5e8;
 		}
 	</style>
