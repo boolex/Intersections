@@ -23,44 +23,81 @@
                                     "sortorderno": 1,
                                     "stops": [
                                         {
+                                            "from": "2017-01-01 10:50:10",
+                                            "to": "2017-01-01 11:05",
+                                            "id": 11,
+                                            "type": 1,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 11:08:10",
+                                            "to": "2017-01-01 11:21",
+                                            "id": 1,
+                                            "type": 1,
+                                            "downtime": 0
+                                        },
+                                        {
                                             "from": "2017-01-01 12:30:10",
                                             "to": "2017-01-01 12:31",
-                                            "id": 1,
+                                            "id": 2,
                                             "type": 2,
                                             "downtime": 0
                                         },
                                         {
                                             "from": "2017-01-01 12:32",
                                             "to": "2017-01-01 12:34",
-                                            "id": 2,
-                                            "type": 3,
+                                            "id": 3,
+                                            "type": 1,
                                             "downtime": 0
                                         },
                                         {
                                             "from": "2017-01-01 12:35",
                                             "to": "2017-01-01 12:37",
-                                            "id": 3,
+                                            "id": 4,
                                             "type": 4,
                                             "downtime": 0
                                         },
                                         {
                                             "from": "2017-01-01 12:37:20",
                                             "to": "2017-01-01 12:38:45",
-                                            "id": 4,
+                                            "id": 5,
                                             "type": 5,
                                             "downtime": 0
                                         },
                                         {
                                             "from": "2017-01-01 12:38:46",
                                             "to": "2017-01-01 12:41",
-                                            "id": 5,
-                                            "type": 6,
+                                            "id": 6,
+                                            "type": 1,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:41:10",
+                                            "to": "2017-01-01 12:41:50",
+                                            "id": 12,
                                             "downtime": 0
                                         },
                                         {
                                             "from": "2017-01-01 12:42:00",
                                             "to": "2017-01-01 12:44:14",
-                                            "id": 6,
+                                            "id": 7,
+                                            "type": 1,
+                                            "downtime": 0
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "prodplace8",
+                                    "oeeGoal": 82.8,
+                                    "availabilityGoal": 93.4,
+                                    "sortorderno": 2,
+                                    "stops": [
+                                        {
+                                            "from": "2017-01-01 11:50:10",
+                                            "to": "2017-01-01 12:05",
+                                            "id": 1001,
+                                            "type": 1,
                                             "downtime": 0
                                         }
                                     ]
@@ -85,7 +122,7 @@
                             "shifts": [
                                 {
                                     "changeType": -1,
-                                    "changeDate": "2017-01-01 10:30"
+                                    "changeDate": "2017-01-01 11:10"
                                 },
                                 {
                                     "changeType": 1,
@@ -121,29 +158,40 @@
     ],
     "dttypes": [
         {
+            "id": 1,
+            "group": 1,
+            "name": "change over",
+            "loss" : "availability"
+        },
+        {
             "id": 2,
             "group": 2,
-            "name": "avail loss"
+            "name": "avail loss",
+            "loss": "availability"
         },
         {
             "id": 3,
             "group": 6,
-            "name": "notplanprod"
+            "name": "notplanprod",
+            "loss": "planned"
         },
         {
             "id": 4,
             "group": 11,
-            "name": "speed loss"
+            "name": "speed loss",
+            "loss": "speed"
         },
         {
             "id": 5,
             "group": 12,
-            "name": "rework loss"
+            "name": "rework loss",
+            "loss": "rework"
         },
         {
             "id": 6,
             "group": 13,
-            "name": "system"
+            "name": "system",
+            "loss": "system"
         }
     ],
     "teams": [

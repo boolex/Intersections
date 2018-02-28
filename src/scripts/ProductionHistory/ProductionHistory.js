@@ -16,11 +16,11 @@ ProductionHistory.prototype.buildItems = function (content) {
     entries = entries.concat(buildProducedUnits(content));
     return entries;
 }
-function getTypeName(content, id) {
+function getTypeProperty(content, id, field) {
     if (content != null && content["dttypes"] != null) {
         for (var i = 0; i < content["dttypes"].length; i++) {
             if (content["dttypes"][i].id == id) {
-                return content["dttypes"][i].name;
+                return content["dttypes"][i][field];
             }
         }
     }
@@ -75,10 +75,12 @@ function buildStops(content) {
     var stops = [];
     getStops(content).forEach(function (stop, index, array) {
         var tags = {
-            type: getTypeName(content, stop.type)
+            
         }
         if(stop.type!=null){
             tags['typeId'] = stop.type;
+            tags['loss'] = getTypeProperty(content, stop.type, 'loss');
+            tags['type'] = getTypeProperty(content, stop.type, 'name')
         }
     
         stops.push({
