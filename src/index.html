@@ -15,13 +15,14 @@
 	<script type="text/javascript" src="scripts/File.js"></script>
 	<script type="text/javascript" src="scripts/timeline.js"></script>
 
-	<script type="text/javascript" src="scripts/RangePicker.js"></script>
+	<script type="text/javascript" src="scripts/controls/RangePicker/RangePicker.js"></script>
+	<script type="text/javascript" src="scripts/controls/RangePicker/RangePickerOnDemand.js"></script>
 
 	<script type="text/javascript" src="scripts/framework/Page.js"></script>
 
-	<script type="text/javascript" src="scripts/framework/Tree.js"></script>
-	<script type="text/javascript" src="scripts/framework/HtmlTree.js"></script>
-	<script type="text/javascript" src="scripts/framework/SelectableHtmlTree.js"></script>
+	<script type="text/javascript" src="scripts/framework/Tree/Tree.js"></script>
+	<script type="text/javascript" src="scripts/framework/Tree/HtmlTree.js"></script>
+	<script type="text/javascript" src="scripts/framework/Tree/SelectableHtmlTree.js"></script>
 
 	<script type="text/javascript" src="scripts/Windows/Header/HeaderPanel.js"></script>
 
@@ -230,7 +231,7 @@
 			}
 		}).start();
 		window.rangePicker =
-			new RangePicker(
+			new RangePickerOnDemand(
 				document.getElementById("rangePicker"),
 				window.app.getContextOption('range'),
 				function (range) {
