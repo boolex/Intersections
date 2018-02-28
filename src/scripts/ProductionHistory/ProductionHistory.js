@@ -74,6 +74,13 @@ function buildOrderBatches(content) {
 function buildStops(content) {
     var stops = [];
     getStops(content).forEach(function (stop, index, array) {
+        var tags = {
+            type: getTypeName(content, stop.type)
+        }
+        if(stop.type!=null){
+            tags['typeId'] = stop.type;
+        }
+    
         stops.push({
             id: "stop_" + stop.id,
             content: "[" + stop.from + "]  -  [" + stop.to + "] " + (stop.dttype == null ? "uncoded" : stop.dttype.name),
@@ -85,9 +92,7 @@ function buildStops(content) {
             + "O" + stop.operatorstation.id
             + "P" + stop.prodplace.id
             + "Stops",
-            tags: {
-                type: getTypeName(content, stop.type)
-            },
+            tags: tags,
             className: 'stop'
         });
     });

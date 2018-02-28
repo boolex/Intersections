@@ -32,11 +32,14 @@ var getGroupIntersections = function (entries, groups, content) {
 
 	});
 
-	var intersections = [];
+	var intersections = null;
 	for (var k in gr) {
 		intersections = getIntersections(intersections, gr[k]);
 	}
 
+	if(intersections==null){
+		return [];
+	}
 	return intersections;
 }
 var getIntersections = function (sourceGroup, targetGroup) {
