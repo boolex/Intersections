@@ -32,7 +32,7 @@ var getGroupIntersections = function (entries, groups, content) {
 
 	});
 
-	var intersections = null;
+	var intersections = [];
 	for (var k in gr) {
 		intersections = getIntersections(intersections, gr[k]);
 	}

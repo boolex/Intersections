@@ -18,6 +18,7 @@ FilteredProducitonHistoryWithinPeriodWithIntersections.prototype.getFilteredItem
 		for (var i = 0; i < this.groups.length; i++) {
 			groups.push(this.groups[i].split(',')[0]);
 		}
+		
 		getGroupIntersections(filteredItems, groups, this.content).forEach(function (inter, index, array) {
 			var interStart = new Date(Date.parse(inter.start));
 			var interEnd = new Date(Date.parse(inter.end));

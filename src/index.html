@@ -180,7 +180,7 @@
 						new FilteredProducitonHistoryWithinPeriodWithIntersections(
 							app.getContextOption('content'),
 							app.getContextOption('range'),
-							app.getContextOption('selectedGroups') || window.page.getParameter('groups').split(';')
+							app.getContextOption('selectedGroups') ||	(window.page.getParameter('groups') || '').split(';')
 						);
 				}
 				if (actions['statistics']) {
@@ -208,7 +208,7 @@
 						function (selectedGroups) {
 							app.update({ selectedGroups: selectedGroups });
 						},
-						window.page.getParameter('groups').split(';')
+						(window.page.getParameter('groups') || '').split(';')
 					).draw(
 						document.getElementById("groups"),
 						function (x) {
