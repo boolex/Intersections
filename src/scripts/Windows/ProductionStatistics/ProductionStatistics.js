@@ -1,5 +1,6 @@
-var ProductionStatistics = function (history) {
+var ProductionStatistics = function (history, range) {
     this.history = history;
+    this.range = range;
 }
 
 ProductionStatistics.prototype.get = function () {
@@ -40,4 +41,11 @@ ProductionStatistics.prototype.getTotalPuTimeScrapped = function () {
         }
     });
     return amount;
+}
+ProductionStatistics.prototype.getPlanTime = function () {
+    return new PlanTime(
+        this.range,
+        this.history.getShifts(),
+        this.history.getPlannedDowntimeEntries()
+    ).compute();
 }

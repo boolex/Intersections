@@ -9,12 +9,35 @@ ProductionHistory.prototype.get = function () {
 }
 ProductionHistory.prototype.buildItems = function (content) {
     var entries = [];
-    entries = entries.concat(buildOrders(content));
-    entries = entries.concat(buildOrderBatches(content));
-    entries = entries.concat(buildStops(content));
-    entries = entries.concat(buildShifts(content));
-    entries = entries.concat(buildProducedUnits(content));
+    entries = entries.concat(this.orders = buildOrders(content));
+    entries = entries.concat(this.orderBatches = buildOrderBatches(content));
+    entries = entries.concat(this.stops = buildStops(content));
+    entries = entries.concat(this.shifts = buildShifts(content));
+    entries = entries.concat(this.producedUnits = buildProducedUnits(content));
     return entries;
+}
+ProductionHistory.prototype.getOrderBatches = function () {
+    return this.orderBatches;
+}
+ProductionHistory.prototype.getStops = function () {
+    return this.stops;
+}
+ProductionHistory.prototype.getFilteredStops = function (predicate) {
+    var stops = [];
+    this.getStops().forEach(function (stop) {
+        if (predicate(stop)) {
+            stops.push(stop);
+        }
+    });
+    return stops;
+}
+ProductionHistory.prototype.getPlannedDowntimeEntries = function () {
+    return this.getFilteredStops(function (stop) {
+        return stop.tags.loss = 1;
+    });
+}
+ProductionHistory.prototype.getShifts = function (filter) {
+    return this.shifts;
 }
 function getTypeProperty(content, id, field) {
     if (content != null && content["dttypes"] != null) {
@@ -43,7 +66,8 @@ function buildOrders(content) {
                 orderNumber: 'test',
                 articleNumber: order.articleNumber
             },
-            className: 'order'
+            className: 'order',
+            operatorStationId: order.operatorstation.id
         });
     });
     return orders;
@@ -66,7 +90,8 @@ function buildOrderBatches(content) {
                 orderNumber: 'test',
                 articleNumber: orderBatch.order.articleNumber
             },
-            className: 'orderbatch'
+            className: 'orderbatch',
+            operatorStationId: orderBatch.operatorstation.id
         });
     });
     return orderBatches;
@@ -75,23 +100,23 @@ function buildStops(content) {
     var stops = [];
     getStops(content).forEach(function (stop, index, array) {
         var tags = {
-            
+
         }
-        if(stop.type!=null){
+        if (stop.type != null) {
             tags['typeId'] = stop.type;
             tags['loss'] = getTypeProperty(content, stop.type, 'loss');
             tags['type'] = getTypeProperty(content, stop.type, 'name')
         }
-    
+
         stops.push({
             id: "stop_" + stop.id,
             content: "[" + stop.from + "]  -  [" + stop.to + "] " + (stop.dttype == null ? "uncoded" : stop.dttype.name),
-            title:  tooltip ({
-                "loss":(stop.type == null ? "uncoded" : getTypeProperty(content, stop.type, 'loss')),
-                "type":(stop.type == null ? "uncoded" :  getTypeProperty(content, stop.type, 'name')),
-                "Start" :stop.from,
-                "End":stop.to,
-                "Duration":(Date.parse(stop.to) - Date.parse(stop.from)) / 1000 + " <b>s</b>"
+            title: tooltip({
+                "loss": (stop.type == null ? "uncoded" : getTypeProperty(content, stop.type, 'loss')),
+                "type": (stop.type == null ? "uncoded" : getTypeProperty(content, stop.type, 'name')),
+                "Start": stop.from,
+                "End": stop.to,
+                "Duration": (Date.parse(stop.to) - Date.parse(stop.from)) / 1000 + " <b>s</b>"
             }),
             start: stop.from,
             end: stop.to,
@@ -101,7 +126,8 @@ function buildStops(content) {
             + "P" + stop.prodplace.id
             + "Stops",
             tags: tags,
-            className: 'stop'
+            className: 'stop',
+            duration : (Date.parse(stop.to) - Date.parse(stop.from)) / 1000
         });
     });
     return stops;
@@ -120,25 +146,26 @@ function buildShifts(content) {
             + "O" + shift.operatorstation.id
             + "Shifts",
             tags: {
-                name : getTeamName(content,shift.changeType)
+                name: getTeamName(content, shift.changeType)
             },
-            className: 'shift'
+            className: 'shift',
+            duration : (Date.parse(shift.end) - Date.parse(shift.start)) / 1000
         });
     });
     return shifts;
 }
-function getTeamName(content, number){
-	if(content!=null && content.teams!=null){
-		for(var i = 0;i<content.teams.length;i++){
-			if(content.teams[i].number == number){
-				return content.teams[i].name;
-			}
-		}
-		return 'unknown';
-	}
-	else{
-		return "unknown";
-	}
+function getTeamName(content, number) {
+    if (content != null && content.teams != null) {
+        for (var i = 0; i < content.teams.length; i++) {
+            if (content.teams[i].number == number) {
+                return content.teams[i].name;
+            }
+        }
+        return 'unknown';
+    }
+    else {
+        return "unknown";
+    }
 }
 function buildProducedUnits(content) {
     var units = [];
@@ -166,20 +193,20 @@ function buildProducedUnits(content) {
     return units;
 }
 
-function tooltip(tags){
-    var result ="<table>";
-    if(tags!=null){
-        for(var tag in tags){
-            result += '<tr><td>' + tag +'</td><td>' + ": <b>" + tags[tag] + '</b></td></tr>';
+function tooltip(tags) {
+    var result = "<table>";
+    if (tags != null) {
+        for (var tag in tags) {
+            result += '<tr><td>' + tag + '</td><td>' + ": <b>" + tags[tag] + '</b></td></tr>';
         }
     }
-    result+='</table>';
+    result += '</table>';
     return result;
 }
-function format(value, length){
+function format(value, length) {
     var x = value;
-    for(var i=value.length;i<length;i++){
-        x+='_';
+    for (var i = value.length; i < length; i++) {
+        x += '_';
     }
     return x;
 }

@@ -22,6 +22,8 @@
 	<script type="text/javascript" src="scripts/controls/RangePicker/RangePicker.js"></script>
 	<script type="text/javascript" src="scripts/controls/RangePicker/RangePickerOnDemand.js"></script>
 
+	<script type="text/javascript" src="scripts/Calculation/PlanTime.js"></script>
+
 	<script type="text/javascript" src="scripts/framework/Page.js"></script>
 
 	<script type="text/javascript" src="scripts/framework/Tree/Tree.js"></script>
@@ -187,7 +189,7 @@
 				}
 				if (actions['statistics']) {
 					window.statisticsWindow.render(
-						new ProductionStatistics(app.history)
+						new ProductionStatistics(app.history, app.getContextOption('range'))
 					);
 				}
 				if (actions['update_timeline']) {
