@@ -1,4 +1,4 @@
-Intersection = function (source, target) {
+var EventIntersection = function (source, target) {
 	this.source = source;
 	this.target = target;
 
@@ -8,12 +8,12 @@ Intersection = function (source, target) {
 	this.targetStart = Date.parse(this.target.start || this.target.from);
 	this.targetEnd = Date.parse(this.target.end || this.target.to);
 }
-Intersection.prototype.isIntersected = function () {
+EventIntersection.prototype.isIntersected = function () {
 	var sourceStartsBeforeTargetEnd = this.sourceStart < this.targetEnd || this.targetEnd == null
 	var sourceEndsAfterTargetStart = this.sourceEnd == null || this.sourceEnd > this.targetStart;
 	return sourceStartsBeforeTargetEnd && sourceEndsAfterTargetStart;
 }
-Intersection.prototype.getIntersectionPeriod = function () {
+EventIntersection.prototype.getIntersectionPeriod = function () {
 	var period = {};
 	period.start = new Date((this.sourceStart > this.targetStart ? this.sourceStart : this.targetStart)).yyyymmddhhmmss();
 	period.end = new Date(this.sourceEnd > this.targetEnd ? this.targetEnd : this.sourceEnd).yyyymmddhhmmss();
@@ -50,7 +50,7 @@ var getIntersections = function (sourceGroup, targetGroup) {
 	var intersections = [];
 	sourceGroup.forEach(function (sourceItem) {
 		targetGroup.forEach(function (targetItem) {
-			var i = new Intersection(sourceItem, targetItem);
+			var i = new EventIntersection(sourceItem, targetItem);
 			if (i.isIntersected()) {
 				var period = i.getIntersectionPeriod();
 

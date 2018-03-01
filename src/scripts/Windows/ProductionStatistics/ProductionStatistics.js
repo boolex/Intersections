@@ -1,6 +1,6 @@
 var ProductionStatistics = function (history, range) {
     this.history = history;
-    this.range = range;
+    this.range = { start: range.from, end: range.to };
 }
 
 ProductionStatistics.prototype.get = function () {
@@ -42,10 +42,34 @@ ProductionStatistics.prototype.getTotalPuTimeScrapped = function () {
     });
     return amount;
 }
+
+ProductionStatistics.prototype.getShedTime=function(){
+    return new ShedTime(
+        this.range,
+        this.history.getShifts()
+    ).compute();
+}
 ProductionStatistics.prototype.getPlanTime = function () {
     return new PlanTime(
         this.range,
         this.history.getShifts(),
         this.history.getPlannedDowntimeEntries()
+    ).compute();
+}
+ProductionStatistics.prototype.getProductionTime = function () {
+    return new ProductionTime(
+        this.range,
+        this.history.getShifts(),
+        this.history.getPlannedDowntimeEntries(),
+        this.history.getAvailabilityLossEntries()
+    ).compute();
+}
+ProductionStatistics.prototype.getProductionTimeWithinOrders = function () {
+    return new ProductionTimeWithinOrders(
+        this.range,
+        this.history.getOrderBatches(),
+        this.history.getShifts(),        
+        this.history.getPlannedDowntimeEntries(),
+        this.history.getAvailabilityLossEntries()
     ).compute();
 }

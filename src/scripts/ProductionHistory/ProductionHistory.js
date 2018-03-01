@@ -17,7 +17,16 @@ ProductionHistory.prototype.buildItems = function (content) {
     return entries;
 }
 ProductionHistory.prototype.getOrderBatches = function () {
-    return this.orderBatches;
+    var orderBatches = [];
+    if (this.orderBatches) {
+        this.orderBatches.forEach(function (orderBatch) {
+            orderBatches.push({
+                start: new Date(Date.parse(orderBatch.start)),
+                end: new Date(Date.parse(orderBatch.end))
+            });
+        });
+    }
+    return orderBatches;
 }
 ProductionHistory.prototype.getStops = function () {
     return this.stops;
@@ -26,18 +35,35 @@ ProductionHistory.prototype.getFilteredStops = function (predicate) {
     var stops = [];
     this.getStops().forEach(function (stop) {
         if (predicate(stop)) {
-            stops.push(stop);
+            stops.push({
+                start: new Date(Date.parse(stop.start)),
+                end: new Date(Date.parse(stop.end))
+            });
         }
     });
     return stops;
 }
 ProductionHistory.prototype.getPlannedDowntimeEntries = function () {
     return this.getFilteredStops(function (stop) {
-        return stop.tags.loss == 1;
+        return stop.tags.losstype == "1";
+    });
+}
+ProductionHistory.prototype.getAvailabilityLossEntries = function () {
+    return this.getFilteredStops(function (stop) {
+        return stop.tags.losstype == "2" || stop.tags.losstype == null;
     });
 }
 ProductionHistory.prototype.getShifts = function (filter) {
-    return this.shifts;
+    var shifts = [];
+    if (this.shifts) {
+        this.shifts.forEach(function (shift) {
+            shifts.push({
+                start: new Date(Date.parse(shift.start)),
+                end: new Date(Date.parse(shift.end))
+            });
+        });
+    }
+    return shifts;
 }
 function getTypeProperty(content, id, field) {
     if (content != null && content["dttypes"] != null) {
@@ -103,19 +129,23 @@ function buildStops(content) {
 
         }
         if (stop.type != null) {
-            tags['type'] ='[id='+stop.type + '] ' + getTypeProperty(content, stop.type, 'name');
+            tags['type'] = '[id=' + stop.type + '] ' + getTypeProperty(content, stop.type, 'name');
             tags['group'] = '[id=' + getTypeProperty(content, stop.type, 'group') + ']';
             tags['losstype'] = getTypeProperty(content, stop.type, 'loss').toString();
-            
-        }
 
+        }
+        else{
+            tags['type'] = 'uncoded';
+            tags['group'] = 'uncoded';
+            tags['losstype'] = null;
+        }
         stops.push({
             id: "stop_" + stop.id,
             content: "[" + stop.from + "]  -  [" + stop.to + "] " + (stop.dttype == null ? "uncoded" : stop.dttype.name),
-            title: tooltip({                
+            title: tooltip({
                 "loss": (stop.type == null ? "uncoded" : (getTypeProperty(content, stop.type, 'loss').toString())),
-                "type": (stop.type == null ? "uncoded" :  ('[id='+stop.type + '] ' + getTypeProperty(content, stop.type, 'name'))),
-                "group":(stop.type == null ? "uncoded" : ('[id=' + getTypeProperty(content, stop.type, 'group') + ']')),                
+                "type": (stop.type == null ? "uncoded" : ('[id=' + stop.type + '] ' + getTypeProperty(content, stop.type, 'name'))),
+                "group": (stop.type == null ? "uncoded" : ('[id=' + getTypeProperty(content, stop.type, 'group') + ']')),
                 "Start": stop.from,
                 "End": stop.to,
                 "Duration": (Date.parse(stop.to) - Date.parse(stop.from)) / 1000 + " <b>s</b>"
@@ -129,7 +159,7 @@ function buildStops(content) {
             + "Stops",
             tags: tags,
             className: 'stop',
-            duration : (Date.parse(stop.to) - Date.parse(stop.from)) / 1000
+            duration: (Date.parse(stop.to) - Date.parse(stop.from)) / 1000
         });
     });
     return stops;
@@ -151,7 +181,7 @@ function buildShifts(content) {
                 name: getTeamName(content, shift.changeType)
             },
             className: 'shift',
-            duration : (Date.parse(shift.end) - Date.parse(shift.start)) / 1000
+            duration: (Date.parse(shift.end) - Date.parse(shift.start)) / 1000
         });
     });
     return shifts;
