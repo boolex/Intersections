@@ -33,7 +33,7 @@ ProductionHistory.prototype.getFilteredStops = function (predicate) {
 }
 ProductionHistory.prototype.getPlannedDowntimeEntries = function () {
     return this.getFilteredStops(function (stop) {
-        return stop.tags.loss = 1;
+        return stop.tags.loss == 1;
     });
 }
 ProductionHistory.prototype.getShifts = function (filter) {
@@ -103,17 +103,19 @@ function buildStops(content) {
 
         }
         if (stop.type != null) {
-            tags['typeId'] = stop.type;
-            tags['loss'] = getTypeProperty(content, stop.type, 'loss');
-            tags['type'] = getTypeProperty(content, stop.type, 'name')
+            tags['type'] ='[id='+stop.type + '] ' + getTypeProperty(content, stop.type, 'name');
+            tags['group'] = '[id=' + getTypeProperty(content, stop.type, 'group') + ']';
+            tags['losstype'] = getTypeProperty(content, stop.type, 'loss').toString();
+            
         }
 
         stops.push({
             id: "stop_" + stop.id,
             content: "[" + stop.from + "]  -  [" + stop.to + "] " + (stop.dttype == null ? "uncoded" : stop.dttype.name),
-            title: tooltip({
-                "loss": (stop.type == null ? "uncoded" : getTypeProperty(content, stop.type, 'loss')),
-                "type": (stop.type == null ? "uncoded" : getTypeProperty(content, stop.type, 'name')),
+            title: tooltip({                
+                "loss": (stop.type == null ? "uncoded" : (getTypeProperty(content, stop.type, 'loss').toString())),
+                "type": (stop.type == null ? "uncoded" :  ('[id='+stop.type + '] ' + getTypeProperty(content, stop.type, 'name'))),
+                "group":(stop.type == null ? "uncoded" : ('[id=' + getTypeProperty(content, stop.type, 'group') + ']')),                
                 "Start": stop.from,
                 "End": stop.to,
                 "Duration": (Date.parse(stop.to) - Date.parse(stop.from)) / 1000 + " <b>s</b>"

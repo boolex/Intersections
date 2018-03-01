@@ -1,75 +1,51 @@
 ﻿<!DOCTYPE HTML>
 <html>
-
-<head>
-		<link rel="icon" type="image/png" href="favicon.png" />
-	<title>Timeline | Basic demo</title>
-
-	<style type="text/css">
-		body,
-		html {
-			font-family: sans-serif;
-		}
-	</style>
-
+<head>	
+	<title>Hist</title>	
+	<link rel="icon" type="image/png" href="favicon.png" />
 	<script type="text/javascript" src="scripts/app.js"></script>	
 	<script type="text/javascript" src="scripts/timeline.js"></script>
-
 	<script type="text/javascript" src="scripts/framework/File.js"></script>
 	<script type="text/javascript" src="scripts/framework/DateExtensions.js"></script>
 	<script type="text/javascript" src="scripts/framework/Intersection.js"></script>
-
 	<script type="text/javascript" src="scripts/controls/RangePicker/RangePicker.js"></script>
 	<script type="text/javascript" src="scripts/controls/RangePicker/RangePickerOnDemand.js"></script>
-
 	<script type="text/javascript" src="scripts/Calculation/PlanTime.js"></script>
-
 	<script type="text/javascript" src="scripts/framework/Page.js"></script>
-
 	<script type="text/javascript" src="scripts/framework/Tree/Tree.js"></script>
 	<script type="text/javascript" src="scripts/framework/Tree/HtmlTree.js"></script>
 	<script type="text/javascript" src="scripts/framework/Tree/SelectableHtmlTree.js"></script>
-
-	<script type="text/javascript" src="scripts/Windows/Header/HeaderPanel.js"></script>
-
 	<script type="text/javascript" src="scripts/ProductionHistory/ProductionHistory.js"></script>
 	<script type="text/javascript" src="scripts/ProductionHistory/ProductionHistoryWithinPeriod.js"></script>
 	<script type="text/javascript" src="scripts/ProductionHistory/FilteredProducitonHistoryWithinPeriodWithIntersections.js"></script>
-
+	<script type="text/javascript" src="scripts/Windows/Header/HeaderPanel.js"></script>
 	<script type="text/javascript" src="scripts/Windows/ProductionStatistics/ProductionStatistics.js"></script>
 	<script type="text/javascript" src="scripts/Windows/ProductionStatistics/StatisticsWindow.js"></script>
-
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorer.js"></script>
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorerWindow.js"></script>
-
 	<script type="text/javascript" src="scripts/Filter.js"></script>
-
-
 	<script src="lib/vis-4.21.0/vis-4.21.0/dist/vis.js"></script>
 	<link href="lib/vis-4.21.0/vis-4.21.0/dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
-
 	<script src="lib/jquery/jquery-1.11.0.min.js"></script>
 	<script src="lib/anytime/anytime.5.2.0.js"></script>
-	<link href="lib/anytime/anytime.5.2.0.css" rel="stylesheet" type="text/css" />
-	
+	<link href="lib/anytime/anytime.5.2.0.css" rel="stylesheet" type="text/css" />	
 	<script type="text/javascript" src="scripts/iterators/orderbatchesIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/ordersIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/producedUnitsIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/shiftPeriodsIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/shiftsIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/stopsIterator.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="controller.js"></script>
 </head>
-
 <body>
 	<div id="log"></div>
-
 	<div id="header"></div>
 	<div id="rangePicker"></div>
 	<div id="visualization"></div>
 	<table>
 		<tr>
-			<td style="vertical-align: top">
-				
+			<td style="vertical-align: top">				
 			</td>
 			<td style="vertical-align: top">
 				<div id="statisticsWindow"></div>
@@ -86,296 +62,11 @@
 				</div>
 			</td>
 		</tr>
-	</table>
-	<div id="TODO">
-		<ul>
-			<li></li>
-		</ul>
-	</div>
-	<script type="text/javascript">
-		var t = [
-			{ "content": "articleNumbers", children: [{ content: "test1" }, { content: "test2" }, { content: "test3" }] },
-			{ "content": "orderNumbers", children: [{ content: "test1" }, { content: "test2" }, { content: "test3" }] }
-		];
-		window.page = new Page(window);
-		window.header =
-			new HeaderPanel(
-				document.getElementById("header"),
-				null
-			).render();
-
-		window.fileExplorer =
-			new FileExplorerWindow(
-				document.getElementById("fileExplorer"),
-				new FileExplorer(),
-				function (file) {
-					app.update({ file: file });
-				}
-			).render();
-
-		window.statisticsWindow = new StatisticsWindow(
-			document.getElementById("statisticsWindow")
-		).render();
-
-		window.app = new App({
-			context: {
-				range: {
-					from: new Date(
-						Date.parse(
-							window.page.getParameter('from') || '2017-01-01T12:24:00'
-						)
-					),
-					to: new Date(
-						Date.parse(
-							window.page.getParameter('to') || '2017-01-01T17:30:00'
-						)
-					)
-				}
-			},
-			initialize: function () {
-
-			},
-			loading: function () {
-
-			},
-			render: function () {
-			},
-			update: function (options) {
-				var actions = {};
-				var app = this.app;
-				if (options != null && options.file != null) {
-					app.setContext('file', options.file);
-					actions['file'] = true;
-					actions['history'] = true;
-					actions['statistics'] = true;
-					actions['update_timeline'] = true;
-					actions['update_header'] = true;
-				}
-				if (options != null && options.range != null) {
-					app.setContext('range', options.range);
-					actions['history'] = true;
-					actions['statistics'] = true;
-					actions['update_timeline'] = true;
-					actions['update_header'] = true;
-					actions['draw_filter_tree'] = true;
-				}
-				if (options != null && options.selectedGroups != null) {
-					app.setContext('selectedGroups', options.selectedGroups);
-					actions['history'] = true;
-					actions['statistics'] = true;
-					actions['update_timeline'] = true;
-					actions['update_header'] = true;
-				}
-				if (options != null && options.content != null) {
-					app.setContext('content', options.content);
-					actions['history'] = true;
-					actions['statistics'] = true;
-					actions['draw_timeline'] = true;
-					actions['draw_filter_tree'] = true;
-					actions['update_header'] = true;
-				}
-				if (actions['file']) {
-					app.getContextOption('file').load(function (content) {
-						app.update({ content: content });
-					});
-				}
-				if (actions['history'] != null) {
-					app.history =
-						new FilteredProducitonHistoryWithinPeriodWithIntersections(
-							app.getContextOption('content'),
-							app.getContextOption('range'),
-							app.getContextOption('selectedGroups') || (window.page.getParameter('groups') || '').split(';')
-						);
-				}
-				if (actions['statistics']) {
-					window.statisticsWindow.render(
-						new ProductionStatistics(app.history, app.getContextOption('range'))
-					);
-				}
-				if (actions['update_timeline']) {
-					window.timeline.updateGroups(
-						app.history,
-						app.getContextOption('selectedGroups')
-					);
-				}
-				if (actions['draw_timeline']) {
-					window.timeline =
-						new Timeline(
-							app.history
-						).draw(document.getElementById('visualization'));
-				}
-				if (actions['draw_filter_tree']) {
-					document.getElementById("groups").innerHTML = "";
-					window.filtersTree = new SelectableHtmlTree(
-						new Filter(app.history).get(),
-						"children",
-						function (selectedGroups) {
-							app.update({ selectedGroups: selectedGroups });
-						},
-						(window.page.getParameter('groups') || '').split(';')
-					).draw(
-						document.getElementById("groups"),
-						function (x) {
-							return x["content"]
-						});
-				}
-				if (actions['update_header']) {
-					window.header.update(app);
-				}
-			},
-			display: function () {
-				try {
-					var app = this.app;
-					var filePath = window.page.getParameter('file') || 'tests/Stops/Production.json';
-					app.update({ file: new File(filePath) });
-				}
-				catch (e) {
-					//log(e);
-				}
-			}
-		}).start();
-		window.rangePicker =
-			new RangePickerOnDemand(
-				document.getElementById("rangePicker"),
-				window.app.getContextOption('range'),
-				function (range) {
-					window.app.update({ range: range });
-				}
-			).render();
-	</script>
-	<style>
-		html,
-		body {
-			margin: 0;
-			padding: 0;
-		}
-
-		#header {
-			height: 80px;
-			background-color: #AFDBD0;
-			padding: 10px;
-		}
-
-		#visualization {
-			padding: 20px;
-		}
-
-		.year {
-			border: 1px solid black;
-			width: 80px;
-		}
-
-		.node {
-			margin-left: 15px;
-		}
-
-		.statisticsWindow {
-			border: 1px solid black;
-		}
-
-		#statisticsWindow table {
-			background-color: white;
-			font-size: 25px;
-		}
-
-		#statisticsWindow table tr td:nth-child(1) {
-			background-color: #384459;
-			color: #fff;
-			width: 250px;
-			padding: 5px;
-			padding-right: 20px;
-			text-align: right;
-		}
-
-		#statisticsWindow table tr td:nth-child(2) {
-			background-color: #e0ebff;
-			color: #384459;
-			width: 150px;
-			padding: 5px;
-			padding-left: 20px;
-			font-weight: bold;
-		}
-
-		#groups {
-			vertical-align: top;
-		}
-
-		#groups>.node {
-			display: inline-block;
-			border: 1px solid grey;
-			vertical-align: top;
-		}
-
-		#rangeFrom,
-		#rangeTo {
-			display: block;
-		}
-
-		#fromContainer,
-		#toContainer {
-			display: inline-block;
-		}
-
-		.vis-item.stop {
-			background-color: #ffb6a0;
-			border-color: black;
-			color: black;
-		}
-
-		.vis-item.shift {
-			background-color: #ceffaf;
-			border-color: black;
-			color: black;
-		}
-
-		.vis-item.intersection {
-			background-color: #bec615;
-			color: white;
-			border-color: #840025;
-			border-width: 2px;
-		}
-
-		.vis-item.orderbatch {
-			background-color: #9edcef;
-		}
-
-		.vis-item.order {
-			background-color: #dee5e8;
-		}
-
-		.visible {
-			display: block!important;
-		}
-
-		.hidden {
-			display: none!important;
-		}
-
-		#rangePicker {
-			vertical-align: top;
-		}
-
-		#rangePicker #fromContainer {
-			vertical-align: top;
-		}
-
-		#rangePicker #toContainer {
-			vertical-align: top;
-		}
-
-		#rangeFrom,
-		#rangeTo {
-			width: 420px;
-			font-size: 30px;
-			font-family: monospace;
-
-		}
-
-		#fromContainer .AnyTime-win,#toContainer .AnyTime-win{
-			position: absolute;
-			z-index: 1000;
-		}
-	</style>
+	</table>	
 </body>
-
 </html>
+<script type="text/javascript">
+window.onload=function(){
+	loadApp();
+}
+</script>
