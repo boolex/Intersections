@@ -86,7 +86,13 @@ function buildStops(content) {
         stops.push({
             id: "stop_" + stop.id,
             content: "[" + stop.from + "]  -  [" + stop.to + "] " + (stop.dttype == null ? "uncoded" : stop.dttype.name),
-            title: "<b>" + (stop.dttype == null ? "uncoded" : stop.dttype.name) + "</b><br/><b>Start:</b> " + stop.from + "<br/><b>End:</b> " + stop.to + "<br/><b>Duration: </b>" + (Date.parse(stop.to) - Date.parse(stop.from)) / 1000 + " <b>s</b>",
+            title:  tooltip ({
+                "loss":(stop.type == null ? "uncoded" : getTypeProperty(content, stop.type, 'loss')),
+                "type":(stop.type == null ? "uncoded" :  getTypeProperty(content, stop.type, 'name')),
+                "Start" :stop.from,
+                "End":stop.to,
+                "Duration":(Date.parse(stop.to) - Date.parse(stop.from)) / 1000 + " <b>s</b>"
+            }),
             start: stop.from,
             end: stop.to,
             group: "S" + stop.site.id
@@ -158,4 +164,22 @@ function buildProducedUnits(content) {
         });
     });
     return units;
+}
+
+function tooltip(tags){
+    var result ="<table>";
+    if(tags!=null){
+        for(var tag in tags){
+            result += '<tr><td>' + tag +'</td><td>' + ": <b>" + tags[tag] + '</b></td></tr>';
+        }
+    }
+    result+='</table>';
+    return result;
+}
+function format(value, length){
+    var x = value;
+    for(var i=value.length;i<length;i++){
+        x+='_';
+    }
+    return x;
 }

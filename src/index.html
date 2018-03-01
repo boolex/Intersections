@@ -2,6 +2,7 @@
 <html>
 
 <head>
+		<link rel="icon" type="image/png" href="favicon.png" />
 	<title>Timeline | Basic demo</title>
 
 	<style type="text/css">
@@ -11,9 +12,12 @@
 		}
 	</style>
 
-	<script type="text/javascript" src="scripts/app.js"></script>
-	<script type="text/javascript" src="scripts/File.js"></script>
+	<script type="text/javascript" src="scripts/app.js"></script>	
 	<script type="text/javascript" src="scripts/timeline.js"></script>
+
+	<script type="text/javascript" src="scripts/framework/File.js"></script>
+	<script type="text/javascript" src="scripts/framework/DateExtensions.js"></script>
+	<script type="text/javascript" src="scripts/framework/Intersection.js"></script>
 
 	<script type="text/javascript" src="scripts/controls/RangePicker/RangePicker.js"></script>
 	<script type="text/javascript" src="scripts/controls/RangePicker/RangePickerOnDemand.js"></script>
@@ -45,10 +49,7 @@
 	<script src="lib/jquery/jquery-1.11.0.min.js"></script>
 	<script src="lib/anytime/anytime.5.2.0.js"></script>
 	<link href="lib/anytime/anytime.5.2.0.css" rel="stylesheet" type="text/css" />
-
-	<script type="text/javascript" src="scripts/DateExtensions.js"></script>
-	<script type="text/javascript" src="scripts/Intersection.js"></script>
-
+	
 	<script type="text/javascript" src="scripts/iterators/orderbatchesIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/ordersIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/producedUnitsIterator.js"></script>
@@ -61,12 +62,12 @@
 	<div id="log"></div>
 
 	<div id="header"></div>
-
+	<div id="rangePicker"></div>
 	<div id="visualization"></div>
 	<table>
 		<tr>
 			<td style="vertical-align: top">
-				<div id="rangePicker"></div>
+				
 			</td>
 			<td style="vertical-align: top">
 				<div id="statisticsWindow"></div>
@@ -154,7 +155,7 @@
 					actions['statistics'] = true;
 					actions['update_timeline'] = true;
 					actions['update_header'] = true;
-					actions['draw_filter_tree']=true;
+					actions['draw_filter_tree'] = true;
 				}
 				if (options != null && options.selectedGroups != null) {
 					app.setContext('selectedGroups', options.selectedGroups);
@@ -181,7 +182,7 @@
 						new FilteredProducitonHistoryWithinPeriodWithIntersections(
 							app.getContextOption('content'),
 							app.getContextOption('range'),
-							app.getContextOption('selectedGroups') ||	(window.page.getParameter('groups') || '').split(';')
+							app.getContextOption('selectedGroups') || (window.page.getParameter('groups') || '').split(';')
 						);
 				}
 				if (actions['statistics']) {
@@ -340,21 +341,37 @@
 			background-color: #dee5e8;
 		}
 
-		.visible{
+		.visible {
 			display: block!important;
 		}
-		.hidden{
+
+		.hidden {
 			display: none!important;
 		}
 
-		#rangePicker{
+		#rangePicker {
 			vertical-align: top;
 		}
-		#rangePicker #fromContainer{
+
+		#rangePicker #fromContainer {
 			vertical-align: top;
 		}
-		#rangePicker #toContainer{
+
+		#rangePicker #toContainer {
 			vertical-align: top;
+		}
+
+		#rangeFrom,
+		#rangeTo {
+			width: 420px;
+			font-size: 30px;
+			font-family: monospace;
+
+		}
+
+		#fromContainer .AnyTime-win,#toContainer .AnyTime-win{
+			position: absolute;
+			z-index: 1000;
 		}
 	</style>
 </body>
