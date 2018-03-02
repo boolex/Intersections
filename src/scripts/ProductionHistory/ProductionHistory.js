@@ -105,8 +105,12 @@ function buildStops(content) {
         if (stop.type != null) {
             tags['type'] ='[id='+stop.type + '] ' + getTypeProperty(content, stop.type, 'name');
             tags['group'] = '[id=' + getTypeProperty(content, stop.type, 'group') + ']';
-            tags['losstype'] = getTypeProperty(content, stop.type, 'loss').toString();
-            
+            tags['losstype'] = getTypeProperty(content, stop.type, 'loss').toString();            
+        }
+        else{
+            tags['type'] ='not coded';
+            tags['group'] ='not coded';
+            tags['losstype'] = 2;   
         }
 
         stops.push({

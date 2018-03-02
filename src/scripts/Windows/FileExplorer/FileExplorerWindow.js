@@ -9,7 +9,7 @@ FileExplorerWindow.prototype.render = function () {
     var selectElement = document.createElement('select');
     this.container.appendChild(selectElement);
 
-    selectElement.size = 25;
+    selectElement.size = 10;
     this.explorer.list().forEach(function (file) {
         var option = document.createElement('option');
         option.innerHTML = file.getPath();
