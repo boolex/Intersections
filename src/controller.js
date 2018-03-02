@@ -1,4 +1,4 @@
-function loadApp(){
+function loadApp(file){
  window.page = 
         new Page(window);
     window.header = new HeaderPanel(
@@ -122,7 +122,7 @@ function loadApp(){
         display: function () {
             try {
                 var app = this.app;
-                var filePath = window.page.getParameter('file') || 'tests/Stops/Groups.json';
+                var filePath = window.page.getParameter('file') || file;
                 app.update({ file: new File(filePath) });
             }
             catch (e) {

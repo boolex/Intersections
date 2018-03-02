@@ -2,6 +2,7 @@ html,
 		body {
 			margin: 0;
 			padding: 0;
+			background-color: #FFFFEE;
 		}
 
 		#header {
@@ -22,110 +23,9 @@ html,
 		.node {
 			margin-left: 15px;
 		}
+		
+		
 
-		.statisticsWindow {
-			border: 1px solid black;
-		}
+		
 
-		#statisticsWindow table {
-			background-color: white;
-			font-size: 25px;
-		}
-
-		#statisticsWindow table tr td:nth-child(1) {
-			background-color: #384459;
-			color: #fff;
-			width: 250px;
-			padding: 5px;
-			padding-right: 20px;
-			text-align: right;
-		}
-
-		#statisticsWindow table tr td:nth-child(2) {
-			background-color: #e0ebff;
-			color: #384459;
-			width: 150px;
-			padding: 5px;
-			padding-left: 20px;
-			font-weight: bold;
-		}
-
-		#groups {
-			vertical-align: top;
-		}
-
-		#groups>.node {
-			display: inline-block;
-			border: 1px solid grey;
-			vertical-align: top;
-		}
-
-		#rangeFrom,
-		#rangeTo {
-			display: block;
-		}
-
-		#fromContainer,
-		#toContainer {
-			display: inline-block;
-		}
-
-		.vis-item.stop {
-			background-color: #ffb6a0;
-			border-color: black;
-			color: black;
-		}
-
-		.vis-item.shift {
-			background-color: #ceffaf;
-			border-color: black;
-			color: black;
-		}
-
-		.vis-item.intersection {
-			background-color: #bec615;
-			color: white;
-			border-color: #840025;
-			border-width: 2px;
-		}
-
-		.vis-item.orderbatch {
-			background-color: #9edcef;
-		}
-
-		.vis-item.order {
-			background-color: #dee5e8;
-		}
-
-		.visible {
-			display: block!important;
-		}
-
-		.hidden {
-			display: none!important;
-		}
-
-		#rangePicker {
-			vertical-align: top;
-		}
-
-		#rangePicker #fromContainer {
-			vertical-align: top;
-		}
-
-		#rangePicker #toContainer {
-			vertical-align: top;
-		}
-
-		#rangeFrom,
-		#rangeTo {
-			width: 420px;
-			font-size: 30px;
-			font-family: monospace;
-
-		}
-
-		#fromContainer .AnyTime-win,#toContainer .AnyTime-win{
-			position: absolute;
-			z-index: 1000;
-		}
+	

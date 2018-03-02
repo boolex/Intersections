@@ -26,7 +26,10 @@ StatisticsWindow.prototype.renderTableContent = function (statistics) {
     this.renderTableRow("PUTimeEnd",statistics.getTotalPuTimeEnd());
     this.renderTableRow("PUTimeStart",statistics.getTotalPuTimeStart());
     this.renderTableRow("PUTimeScrapped",statistics.getTotalPuTimeScrapped());
-    this.renderTableRow("PlanTime",statistics.getPlanTime());
+    this.renderTableRow("Sheduled time",statistics.getShedTime());
+    this.renderTableRow("Planned production time",statistics.getPlanTime());
+    this.renderTableRow("Production time",statistics.getProductionTime());
+    this.renderTableRow("Production time within orders",statistics.getProductionTimeWithinOrders());
 }
 StatisticsWindow.prototype.renderTable = function () {
     var table = document.createElement("table");

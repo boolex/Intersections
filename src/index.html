@@ -4,23 +4,42 @@
 	<title>Hist</title>	
 	<link rel="icon" type="image/png" href="favicon.png" />
 	<script type="text/javascript" src="scripts/app.js"></script>	
-	<script type="text/javascript" src="scripts/timeline.js"></script>
+	
 	<script type="text/javascript" src="scripts/framework/File.js"></script>
 	<script type="text/javascript" src="scripts/framework/DateExtensions.js"></script>
-	<script type="text/javascript" src="scripts/framework/Intersection.js"></script>
-	<script type="text/javascript" src="scripts/controls/RangePicker/RangePicker.js"></script>
-	<script type="text/javascript" src="scripts/controls/RangePicker/RangePickerOnDemand.js"></script>
+	<script type="text/javascript" src="scripts/framework/EventCollection.js"></script>
+	<script type="text/javascript" src="scripts/framework/Intersection/Intersection.js"></script>
+	<script type="text/javascript" src="scripts/framework/Intersection/IntersectionSet.js"></script>
+	<script type="text/javascript" src="scripts/framework/Intersection/EventIntersection.js"></script>
+	
+	<script type="text/javascript" src="scripts/Calculation/ShedTime.js"></script>
 	<script type="text/javascript" src="scripts/Calculation/PlanTime.js"></script>
+	<script type="text/javascript" src="scripts/Calculation/ProductionTime.js"></script>
+	<script type="text/javascript" src="scripts/Calculation/ProductionTimeWithinOrders.js"></script>
+	<script type="text/javascript" src="scripts/framework/Sorting/SortedEventCollection.js"></script>
 	<script type="text/javascript" src="scripts/framework/Page.js"></script>
-	<script type="text/javascript" src="scripts/framework/Tree/Tree.js"></script>
-	<script type="text/javascript" src="scripts/framework/Tree/HtmlTree.js"></script>
-	<script type="text/javascript" src="scripts/framework/Tree/SelectableHtmlTree.js"></script>
+
 	<script type="text/javascript" src="scripts/ProductionHistory/ProductionHistory.js"></script>
 	<script type="text/javascript" src="scripts/ProductionHistory/ProductionHistoryWithinPeriod.js"></script>
 	<script type="text/javascript" src="scripts/ProductionHistory/FilteredProducitonHistoryWithinPeriodWithIntersections.js"></script>
 	<script type="text/javascript" src="scripts/Windows/Header/HeaderPanel.js"></script>
+
+	<script type="text/javascript" src="scripts/framework/Tree/Tree.js"></script>
+	<script type="text/javascript" src="scripts/framework/Tree/HtmlTree.js"></script>
+	<script type="text/javascript" src="scripts/framework/Tree/SelectableHtmlTree.js"></script>
+	<link rel="stylesheet" type="text/css" href="scripts/framework/Tree/style.css">
+
+	<script type="text/javascript" src="scripts/controls/RangePicker/RangePicker.js"></script>
+	<script type="text/javascript" src="scripts/controls/RangePicker/RangePickerOnDemand.js"></script>
+	<link rel="stylesheet" type="text/css" href="scripts/Controls/RangePicker/style.css">
+
+	<script type="text/javascript" src="scripts/Controls/Timeline/Timeline.js"></script>
+	<link rel="stylesheet" type="text/css" href="scripts/Controls/Timeline/style.css">
+
 	<script type="text/javascript" src="scripts/Windows/ProductionStatistics/ProductionStatistics.js"></script>
 	<script type="text/javascript" src="scripts/Windows/ProductionStatistics/StatisticsWindow.js"></script>
+	<link rel="stylesheet" type="text/css" href="scripts/Windows/ProductionStatistics/style.css">
+	
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorer.js"></script>
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorerWindow.js"></script>
 	<script type="text/javascript" src="scripts/Filter.js"></script>
@@ -37,6 +56,8 @@
 	<script type="text/javascript" src="scripts/iterators/stopsIterator.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script type="text/javascript" src="controller.js"></script>
+
+	<script type="text/javascript" src="config.js"></script>
 </head>
 <body>
 	<div id="log"></div>
@@ -67,6 +88,6 @@
 </html>
 <script type="text/javascript">
 window.onload=function(){
-	loadApp();
+	loadApp(config.file);
 }
 </script>

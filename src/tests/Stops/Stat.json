@@ -1,0 +1,214 @@
+﻿{
+    "sites": [
+        {
+            "id": 1,
+            "name": "site1",
+            "sortorderno": 1,
+            "departments": [
+                {
+                    "id": 1,
+                    "name": "department1",
+                    "sortorderno": 1,
+                    "operatorstations": [
+                        {
+                            "id": 1,
+                            "qualityGoal": 80.0,
+                            "performanceGoal": 92.7,
+                            "prodplaces": [
+                                {
+                                    "id": 1,
+                                    "name": "prodplace7",
+                                    "oeeGoal": 75.5,
+                                    "availabilityGoal": 89.3,
+                                    "sortorderno": 1,
+                                    "stops": [
+                                        {
+                                            "from": "2017-01-01 10:50:10",
+                                            "to": "2017-01-01 11:05",
+                                            "id": 11,
+                                            "type": 3,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 11:08:10",
+                                            "to": "2017-01-01 11:21",
+                                            "id": 1,
+                                            "type": 1,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:30:10",
+                                            "to": "2017-01-01 12:31",
+                                            "id": 2,
+                                            "type": 3,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:32",
+                                            "to": "2017-01-01 12:34",
+                                            "id": 3,
+                                            "type": 1,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:35",
+                                            "to": "2017-01-01 12:37",
+                                            "id": 4,
+                                            "type": 3,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:37:20",
+                                            "to": "2017-01-01 12:38:45",
+                                            "id": 5,
+                                            "type": 5,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:38:46",
+                                            "to": "2017-01-01 12:41",
+                                            "id": 6,
+                                            "type": 1,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:41:10",
+                                            "to": "2017-01-01 12:41:50",
+                                            "id": 12,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:42:00",
+                                            "to": "2017-01-01 12:44:14",
+                                            "id": 7,
+                                            "type": 1,
+                                            "downtime": 0
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "prodplace8",
+                                    "oeeGoal": 82.8,
+                                    "availabilityGoal": 93.4,
+                                    "sortorderno": 2,
+                                    "stops": [
+                                        {
+                                            "from": "2017-01-01 11:50:10",
+                                            "to": "2017-01-01 12:05",
+                                            "id": 1001,
+                                            "type": 1,
+                                            "downtime": 0
+                                        }
+                                    ]
+                                }
+                            ],
+                            "orders": [
+                                {
+                                    "id": 1001,
+                                    "article": "article1",
+                                    "start": "2017-01-01 12:30",
+                                    "end": "2017-01-03 15:20",
+                                    "articleNumber": "art1",
+                                    "batches": [
+                                        {
+                                            "id": 1,
+                                            "start": "2017-01-01 12:33",
+                                            "end": "2017-01-01 12:43"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "shifts": [
+                                {
+                                    "changeType": -1,
+                                    "changeDate": "2017-01-01 11:10"
+                                },
+                                {
+                                    "changeType": 1,
+                                    "changeDate": "2017-01-01 12:39"
+                                },
+                                {
+                                    "changeType": 2,
+                                    "changeDate": "2017-01-01 13:30"
+                                },
+                                {
+                                    "changeType": -1,
+                                    "changeDate": "2017-01-01 15:30"
+                                },
+                                {
+                                    "changeType": 1,
+                                    "changeDate": "2017-01-02 13:30"
+                                },
+                                {
+                                    "changeType": -1,
+                                    "changeDate": "2017-01-02 15:30"
+                                },
+                                {
+                                    "changeType": 1,
+                                    "changeDate": "2017-01-02 16:30"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+
+        }
+    ],
+    "dttypes": [
+        {
+            "id": 1,
+            "group": 1,
+            "name": "change over",
+            "loss" : "2"
+        },
+        {
+            "id": 2,
+            "group": 2,
+            "name": "avail loss",
+            "loss": "2"
+        },
+        {
+            "id": 3,
+            "group": 6,
+            "name": "notplanprod",
+            "loss": "1"
+        },
+        {
+            "id": 4,
+            "group": 11,
+            "name": "speed loss",
+            "loss": "3"
+        },
+        {
+            "id": 5,
+            "group": 12,
+            "name": "rework loss",
+            "loss": "4"
+        },
+        {
+            "id": 6,
+            "group": 13,
+            "name": "system",
+            "loss": "5"
+        }
+    ],
+    "teams": [
+        {
+            "id": 1,
+            "name": "Team1",
+            "number": 1
+        },
+        {
+            "id": 2,
+            "name": "Team2",
+            "number": 2
+        },
+        {
+            "id": 3,
+            "name": "Team3",
+            "number": 3
+        }
+    ]
+}

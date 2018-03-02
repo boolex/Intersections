@@ -1,0 +1,9 @@
+#groups {
+    vertical-align: top;
+}
+
+#groups>.node {
+    display: inline-block;
+    border: 1px solid grey;
+    vertical-align: top;
+}

@@ -1,0 +1,26 @@
+.vis-item.stop {
+    background-color: #ffb6a0;
+    border-color: black;
+    color: black;
+}
+
+.vis-item.shift {
+    background-color: #ceffaf;
+    border-color: black;
+    color: black;
+}
+
+.vis-item.intersection {
+    background-color: #bec615;
+    color: white;
+    border-color: #840025;
+    border-width: 2px;
+}
+
+.vis-item.orderbatch {
+    background-color: #9edcef;
+}
+
+.vis-item.order {
+    background-color: #dee5e8;
+}

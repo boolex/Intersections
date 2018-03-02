@@ -1,0 +1,46 @@
+.visible {
+    display: block!important;
+}
+
+.hidden {
+    display: none!important;
+}
+
+#rangePicker {
+    vertical-align: top;
+    text-align: center;
+}
+
+#rangePicker #fromContainer {
+    vertical-align: top;
+}
+
+#rangePicker #toContainer {
+    vertical-align: top;
+}
+
+#rangeFrom,
+#rangeTo {
+    width: 420px;
+    font-size: 30px;
+    font-family: monospace;
+    background-color:#FFFF9A;
+    text-align: center;
+}
+
+#fromContainer .AnyTime-win,#toContainer .AnyTime-win{
+    position: absolute;
+    z-index: 1000;
+}	
+.AnyTime-win{
+    opacity: 0.9;
+}
+#rangeFrom,
+#rangeTo {
+    display: block;
+}
+
+#fromContainer,
+#toContainer {
+    display: inline-block;
+}
