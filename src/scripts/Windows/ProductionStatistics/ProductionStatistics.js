@@ -1,6 +1,6 @@
 var ProductionStatistics = function (history, range) {
     this.history = history;
-    this.range = { start: range.from, end: range.to };
+    this.range = { start: new Date(range.from), end: new Date(range.to) };
 }
 
 ProductionStatistics.prototype.get = function () {
@@ -71,5 +71,28 @@ ProductionStatistics.prototype.getProductionTimeWithinOrders = function () {
         this.history.getShifts(),        
         this.history.getPlannedDowntimeEntries(),
         this.history.getAvailabilityLossEntries()
+    ).compute();
+}
+ProductionStatistics.prototype.getIntersections=function(){
+    var inter = [];
+    this.history.get().forEach(function(e){
+        if(e.group=='Intersections'){
+            inter.push({
+                start: new Date(Date.parse(e.start)),
+                end: new Date(Date.parse(e.end))
+            })
+        }
+    });
+    if(inter.length==0){
+        inter.push(this.range);
+    }
+    return inter;
+}
+ProductionStatistics.prototype.getAvailability = function () {
+    return new Availability(
+        this.range,
+        new IntersectionSet([this.getIntersections(), this.history.getShifts()]).get(),
+        new IntersectionSet([this.getIntersections(), this.history.getPlannedDowntimeEntries(), this.history.getShifts()]).get(),
+        new IntersectionSet([this.getIntersections(), this.history.getAvailabilityLossEntries(), this.history.getShifts()]).get()
     ).compute();
 }

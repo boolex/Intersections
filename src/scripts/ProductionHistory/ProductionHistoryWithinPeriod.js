@@ -8,6 +8,9 @@ ProductionHistoryWithinPeriod.prototype = Object.create(ProductionHistory.protot
 ProductionHistoryWithinPeriod.prototype.get = function () {
     return (this.itemsLimitedByRange = this.itemsLimitedByRange || this.getItemsLimitedByRange());
 }
+ProductionHistoryWithinPeriod.prototype.getEvents = function () {
+    return (this.itemsLimitedByRange = this.itemsLimitedByRange || this.getItemsLimitedByRange());
+}
 ProductionHistoryWithinPeriod.prototype.getItemsLimitedByRange = function () {
     var items = ProductionHistory.prototype.get.apply(this, arguments);
     var itemsLimitedByRange = [];

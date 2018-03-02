@@ -8,7 +8,7 @@ ProductionTime.prototype.compute = function () {
     return this.planTime() - this.availabilityLosses();
 }
 ProductionTime.prototype.planTime = function () {
-    return new PlanTime(this.range, this.shifts, this.plannedDowntime).compute();
+    return new PlanTime(this.range, this.shifts, this.plannedDowntimes).compute();
 }
 ProductionTime.prototype.availabilityLosses = function () {
     var availLoss = 0;

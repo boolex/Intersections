@@ -1,3 +1,3 @@
 window.config = {
-    file : 'tests/Stops/Detailed.json'
+    file : 'tests/Availability/Production.json'
 };
