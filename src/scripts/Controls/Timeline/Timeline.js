@@ -1,6 +1,7 @@
-var Timeline = function (history, groups) {
+var Timeline = function (history, groups, now) {
     this.history = history;
     this.groups = groups;
+    this.now = now;
 }
 Timeline.prototype.draw = function (container) {
     container.innerHTML = "";
@@ -11,6 +12,9 @@ Timeline.prototype.draw = function (container) {
             showTooltips: true
         }
     );
+    if (this.now != null) {
+        this.timeLine.addCustomTime(this.now, "now");
+    }
 
     this.timeLine.setGroups(new Filter(this.history).get());
     return this;

@@ -1,20 +1,20 @@
-function loadApp(file){
- window.page = 
+function loadApp(file) {
+    window.page =
         new Page(window);
     window.header = new HeaderPanel(
-            document.getElementById("header"),
-            null
-        ).render();
+        document.getElementById("header"),
+        null
+    ).render();
     window.fileExplorer = new FileExplorerWindow(
-            document.getElementById("fileExplorer"),
-            new FileExplorer(),
-            function (file) {
-                app.update({ file: file });
-            }
-        ).render();
+        document.getElementById("fileExplorer"),
+        new FileExplorer(),
+        function (file) {
+            app.update({ file: file });
+        }
+    ).render();
     window.statisticsWindow = new StatisticsWindow(
-            document.getElementById("statisticsWindow")
-        ).render();
+        document.getElementById("statisticsWindow")
+    ).render();
     window.app = new App({
         context: {
             range: {
@@ -97,7 +97,9 @@ function loadApp(file){
             if (actions['draw_timeline']) {
                 window.timeline =
                     new Timeline(
-                        app.history
+                        app.history,
+                        null,
+                        app.getContextOption('content').now
                     ).draw(document.getElementById('visualization'));
             }
             if (actions['draw_filter_tree']) {
@@ -129,12 +131,12 @@ function loadApp(file){
                 //log(e);
             }
         }
-        }).start();
-    window.rangePicker =new RangePickerOnDemand(
-            document.getElementById("rangePicker"),
-            window.app.getContextOption('range'),
-            function (range) {
-                window.app.update({ range: range });
-            }
-        ).render();
-    }
+    }).start();
+    window.rangePicker = new RangePickerOnDemand(
+        document.getElementById("rangePicker"),
+        window.app.getContextOption('range'),
+        function (range) {
+            window.app.update({ range: range });
+        }
+    ).render();
+}

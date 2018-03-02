@@ -1,17 +1,19 @@
 ﻿<!DOCTYPE HTML>
 <html>
-<head>	
-	<title>Hist</title>	
+
+<head>
+	<title>Hist</title>
 	<link rel="icon" type="image/png" href="favicon.png" />
-	<script type="text/javascript" src="scripts/app.js"></script>	
-	
+	<script type="text/javascript" src="scripts/app.js"></script>
+
 	<script type="text/javascript" src="scripts/framework/File.js"></script>
+	<script type="text/javascript" src="scripts/framework/Event.js"></script>
 	<script type="text/javascript" src="scripts/framework/DateExtensions.js"></script>
 	<script type="text/javascript" src="scripts/framework/EventCollection.js"></script>
 	<script type="text/javascript" src="scripts/framework/Intersection/Intersection.js"></script>
 	<script type="text/javascript" src="scripts/framework/Intersection/IntersectionSet.js"></script>
 	<script type="text/javascript" src="scripts/framework/Intersection/EventIntersection.js"></script>
-	
+
 	<script type="text/javascript" src="scripts/Calculation/ShedTime.js"></script>
 	<script type="text/javascript" src="scripts/Calculation/PlanTime.js"></script>
 	<script type="text/javascript" src="scripts/Calculation/ProductionTime.js"></script>
@@ -41,7 +43,7 @@
 	<script type="text/javascript" src="scripts/Windows/ProductionStatistics/ProductionStatistics.js"></script>
 	<script type="text/javascript" src="scripts/Windows/ProductionStatistics/StatisticsWindow.js"></script>
 	<link rel="stylesheet" type="text/css" href="scripts/Windows/ProductionStatistics/style.css">
-	
+
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorer.js"></script>
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorerWindow.js"></script>
 	<script type="text/javascript" src="scripts/Filter.js"></script>
@@ -49,7 +51,7 @@
 	<link href="lib/vis-4.21.0/vis-4.21.0/dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
 	<script src="lib/jquery/jquery-1.11.0.min.js"></script>
 	<script src="lib/anytime/anytime.5.2.0.js"></script>
-	<link href="lib/anytime/anytime.5.2.0.css" rel="stylesheet" type="text/css" />	
+	<link href="lib/anytime/anytime.5.2.0.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="scripts/iterators/orderbatchesIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/ordersIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/producedUnitsIterator.js"></script>
@@ -61,14 +63,18 @@
 
 	<script type="text/javascript" src="config.js"></script>
 </head>
+
 <body>
 	<div id="log"></div>
-	<div id="header"></div>
+	<div id="header">
+		file: 	<div id="fileName"></div>
+		now:	<div id="scenario_now"></div>
+	</div>
 	<div id="rangePicker"></div>
 	<div id="visualization"></div>
 	<table>
 		<tr>
-			<td style="vertical-align: top">				
+			<td style="vertical-align: top">
 			</td>
 			<td style="vertical-align: top">
 				<div id="statisticsWindow"></div>
@@ -85,11 +91,13 @@
 				</div>
 			</td>
 		</tr>
-	</table>	
+	</table>
 </body>
+
 </html>
 <script type="text/javascript">
-window.onload=function(){
-	loadApp(config.file);
-}
+	window.onload = function () {
+		loadApp(config.file);
+	}
+
 </script>

@@ -7,10 +7,8 @@ HeaderPanel.prototype.update = function (app) {
     this.render();
 }
 HeaderPanel.prototype.render = function () {
-    this.container.innerHTML = "";
-    var caption = document.createElement("div");
-    caption.innerHTML = "File: <b>" + this.getLoadedFileName() + "</b>";
-    this.container.appendChild(caption);
+    this.container.querySelector('#fileName').innerHTML =  this.getLoadedFileName();
+    this.container.querySelector('#scenario_now').innerHTML = this.getNow();
     return this;
 }
 HeaderPanel.prototype.getLoadedFileName = function () {
@@ -21,3 +19,9 @@ HeaderPanel.prototype.getLoadedFileName = function () {
         return "file isn't loaded";
     }
 };
+HeaderPanel.prototype.getNow = function () {
+    if (this.app && this.app.getContextOption('content') && this.app.getContextOption('content').now) {
+        return this.app.getContextOption('content').now;
+    }
+    return "Now isn't specified";
+}

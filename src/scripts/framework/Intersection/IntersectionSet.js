@@ -42,7 +42,7 @@ IntersectionSet.prototype.get = function () {
     var start = sorted[0].on;
     sorted.forEach(function (item) {
         if (activeTypes.length == this.collections.length) {
-            intersections.push({ start: start, end: item.on });
+            intersections.push(new Event(start, item.on, 'itr'));
         }
 
         if (item.isStart) {

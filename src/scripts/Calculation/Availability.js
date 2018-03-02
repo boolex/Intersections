@@ -4,7 +4,6 @@ var Availability = function(range, shifts, plannedDowntimes, availLossDowntimes)
     this.plannedDowntimes = plannedDowntimes;
     this.availLossDowntimes = availLossDowntimes;
 }
-
 Availability.prototype.compute=function(){    
     if(this.plannedProductionTime()>0){
        return (100 * this.productionTime() / this.plannedProductionTime()).toFixed(5);

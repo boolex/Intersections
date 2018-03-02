@@ -83,7 +83,7 @@ function buildOrders(content) {
             content: "order",
             title: "<b>Order_Id:</b> " + order.id + "<br/><b>Start:</b> " + order.start + "<br/><b>End:</b> " + order.end + "<br/><b>Duration: </b>" + (Date.parse(order.end) - Date.parse(order.start)) / 1000 + " <b>s</b>",
             start: order.start,
-            end: order.end == null? content.now:order.end,
+            end: order.end == null ? content.now : order.end,
             group: "S" + order.site.id
             + "D" + order.department.id
             + "O" + order.operatorstation.id
@@ -91,7 +91,7 @@ function buildOrders(content) {
             tags: {
                 orderNumber: 'test',
                 articleNumber: order.articleNumber,
-                orderId:order.id
+                orderId: order.id
             },
             className: 'order',
             operatorStationId: order.operatorstation.id
@@ -107,13 +107,13 @@ function buildOrderBatches(content) {
             title: "<b>Order_Id:</b> " + orderBatch.order.id + "<br/><b>Start:</b> " + orderBatch.start + "<br/><b>End:</b> " + orderBatch.end + "<br/><b>Duration: </b>" + (Date.parse(orderBatch.end) - Date.parse(orderBatch.start)) / 1000 + " <b>s</b>",
             content: "orderbatch",
             start: orderBatch.start,
-            end: orderBatch.end == null? content.now:orderBatch.end,
+            end: orderBatch.end == null ? content.now : orderBatch.end,
             group: "S" + orderBatch.site.id
             + "D" + orderBatch.department.id
             + "O" + orderBatch.operatorstation.id
             + "OrderBatches",
             tags: {
-                orderId:  orderBatch.order.id,
+                orderId: orderBatch.order.id,
                 orderNumber: 'test',
                 articleNumber: orderBatch.order.articleNumber
             },
@@ -127,14 +127,14 @@ function buildStops(content) {
     var stops = [];
     getStops(content).forEach(function (stop, index, array) {
         var tags = {
-
+            id: stop.id
         }
         if (stop.type != null) {
             tags['type'] = '[id=' + stop.type + '] ' + getTypeProperty(content, stop.type, 'name');
             tags['group'] = '[id=' + getTypeProperty(content, stop.type, 'group') + ']';
             tags['losstype'] = getTypeProperty(content, stop.type, 'loss');
         }
-        else{
+        else {
             tags['type'] = 'uncoded';
             tags['group'] = 'uncoded';
             tags['losstype'] = null;

@@ -5,7 +5,7 @@ EventCollection.prototype.duration = function () {
     var d = 0;
     if (this.collection) {
         this.collection.forEach(function (event) {
-            d += (event.end - event.start) / 1000;
+            d += event.duration();
         });
     }
     return d;
