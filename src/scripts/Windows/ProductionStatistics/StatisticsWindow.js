@@ -22,6 +22,7 @@ StatisticsWindow.prototype.renderTableRow = function (caption, value) {
     this.tbody.appendChild(tr);
 }
 StatisticsWindow.prototype.renderTableContent = function (statistics) {
+    this.renderTableRow("Total time", statistics.getTotalTime());
     this.renderTableRow("Intersection time", statistics.getTotalInstersectionTime());
     this.renderTableRow("Availability",statistics.getAvailability());
     this.renderTableRow("PUTimeEnd",statistics.getTotalPuTimeEnd());

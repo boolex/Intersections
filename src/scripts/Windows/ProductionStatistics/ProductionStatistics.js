@@ -43,7 +43,7 @@ ProductionStatistics.prototype.getTotalPuTimeScrapped = function () {
     return amount;
 }
 
-ProductionStatistics.prototype.getShedTime=function(){
+ProductionStatistics.prototype.getShedTime = function () {
     return new ShedTime(
         this.range,
         this.history.getShifts()
@@ -68,31 +68,55 @@ ProductionStatistics.prototype.getProductionTimeWithinOrders = function () {
     return new ProductionTimeWithinOrders(
         this.range,
         this.history.getOrderBatches(),
-        this.history.getShifts(),        
+        this.history.getShifts(),
         this.history.getPlannedDowntimeEntries(),
         this.history.getAvailabilityLossEntries()
     ).compute();
 }
-ProductionStatistics.prototype.getIntersections=function(){
+ProductionStatistics.prototype.getIntersections = function () {
     var inter = [];
-    this.history.get().forEach(function(e){
-        if(e.group=='Intersections'){
-            inter.push({
-                start: new Date(Date.parse(e.start)),
-                end: new Date(Date.parse(e.end))
-            })
+    this.history.get().forEach(function (e) {
+        if (e.group == 'Intersections') {
+            inter.push(
+                new Event(
+                    new Date(Date.parse(e.start)),
+                    new Date(Date.parse(e.end))
+                )
+            );
         }
     });
-    if(inter.length==0){
-        inter.push(this.range);
+    if (inter.length == 0) {
+        inter.push(
+            new Event(
+                this.range.start,
+                this.range.end
+            )
+        );
     }
     return inter;
 }
 ProductionStatistics.prototype.getAvailability = function () {
     return new Availability(
+        this.range,/*ranges*/
+        new IntersectionSet([/*shifts*/
+            this.getIntersections(),
+            this.history.getShifts()
+        ]).get(),
+        new IntersectionSet([/*plannedDowntimes*/
+            this.getIntersections(),
+            this.history.getPlannedDowntimeEntries(),
+            this.history.getShifts()
+        ]).get(),
+        new IntersectionSet([/*availLossDowntimes*/
+            this.getIntersections(),
+            this.history.getAvailabilityLossEntries(),
+            this.history.getShifts()
+        ]).get()
+    ).compute();
+}
+ProductionStatistics.prototype.getTotalTime = function () {
+    return new TotalTime(
         this.range,
-        new IntersectionSet([this.getIntersections(), this.history.getShifts()]).get(),
-        new IntersectionSet([this.getIntersections(), this.history.getPlannedDowntimeEntries(), this.history.getShifts()]).get(),
-        new IntersectionSet([this.getIntersections(), this.history.getAvailabilityLossEntries(), this.history.getShifts()]).get()
+        this.getIntersections()
     ).compute();
 }
