@@ -120,3 +120,9 @@ ProductionStatistics.prototype.getTotalTime = function () {
         this.getIntersections()
     ).compute();
 }
+ProductionStatistics.prototype.getTotalProducedAmount = function () {
+    return new TotalProducedAmount(
+        this.history.getProducedAmounts(),
+        this.history.getStartedAmounts()
+    ).compute();
+}
