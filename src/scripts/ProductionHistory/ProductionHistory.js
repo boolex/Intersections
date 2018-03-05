@@ -13,7 +13,7 @@ ProductionHistory.prototype.buildItems = function (content) {
     entries = entries.concat(this.orderBatches = buildOrderBatches(content));
     entries = entries.concat(this.stops = buildStops(content));
     entries = entries.concat(this.shifts = buildShifts(content));
-    entries = entries.concat(this.producedUnits = buildProducedUnits(content));
+    entries = entries.concat(this.units = buildProducedUnits(content));
     return entries;
 }
 ProductionHistory.prototype.getOrderBatches = function () {
@@ -65,6 +65,7 @@ ProductionHistory.prototype.getShifts = function (filter) {
     }
     return shifts;
 }
+
 function getTypeProperty(content, id, field) {
     if (content != null && content["dttypes"] != null) {
         for (var i = 0; i < content["dttypes"].length; i++) {

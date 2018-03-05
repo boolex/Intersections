@@ -1,3 +1,6 @@
+#visualization .vis-timeline{
+    background-color: #ffffff;
+}
 .vis-item.stop {
     background-color: #ffb6a0;
     border-color: black;

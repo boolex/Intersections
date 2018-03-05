@@ -18,7 +18,7 @@ ProductionHistoryWithinPeriod.prototype.getItemsLimitedByRange = function () {
     var withinDateRange = function (fromStr, toStr) {
         var from = Date.parse(fromStr);
         var to = Date.parse(toStr);
-        return (ctx == null || ctx.to == null || from < ctx.to) && (ctx == null || ctx.from == null || to == null || ctx.from < to);
+        return (ctx == null || ctx.to == null || from <= ctx.to) && (ctx == null || ctx.from == null || to == null || ctx.from <= to);
     }
     var updateEvent = function (e) {
         var from = Date.parse(e.start || e.from);
@@ -48,4 +48,42 @@ ProductionHistoryWithinPeriod.prototype.getItemsLimitedByRange = function () {
     });
     return itemsLimitedByRange;
 }
-
+ProductionHistoryWithinPeriod.prototype.getProducedAmounts = function () {
+    return this.get().filter(
+        function (item) {
+            return 'PUTimeEnd' == item.eventType;
+        },
+        function (item) {
+            return {
+                orderId: item.tags.orderId,
+                amount: item.amount,
+                time: item.start
+            };
+        });
+}
+ProductionHistoryWithinPeriod.prototype.getStartedAmounts = function () {
+    return this.get().filter(
+        function (item) {
+            return 'PUTimeStart' == item.eventType;
+        },
+        function (item) {
+            return {
+                orderId: item.tags.orderId,
+                amount: item.amount,
+                time: item.start
+            };
+        });
+}
+ProductionHistoryWithinPeriod.prototype.getScrappedAmounts = function () {
+    return this.get().filter(
+        function (item) {
+            return 'PUTimeScrapped' == item.eventType;
+        },
+        function (item) {
+            return {
+                orderId: item.tags.orderId,
+                amount: item.amount,
+                time: item.start
+            };
+        });
+}

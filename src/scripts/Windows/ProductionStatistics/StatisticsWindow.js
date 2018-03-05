@@ -22,15 +22,17 @@ StatisticsWindow.prototype.renderTableRow = function (caption, value) {
     this.tbody.appendChild(tr);
 }
 StatisticsWindow.prototype.renderTableContent = function (statistics) {
+    this.renderTableRow("Total time", statistics.getTotalTime());
     this.renderTableRow("Intersection time", statistics.getTotalInstersectionTime());
-    this.renderTableRow("Availability",statistics.getAvailability());
-    this.renderTableRow("PUTimeEnd",statistics.getTotalPuTimeEnd());
-    this.renderTableRow("PUTimeStart",statistics.getTotalPuTimeStart());
-    this.renderTableRow("PUTimeScrapped",statistics.getTotalPuTimeScrapped());
-    this.renderTableRow("Sheduled time",statistics.getShedTime());
-    this.renderTableRow("Planned production time",statistics.getPlanTime());
-    this.renderTableRow("Production time",statistics.getProductionTime());
-    this.renderTableRow("Production time within orders",statistics.getProductionTimeWithinOrders());
+    this.renderTableRow("Availability", statistics.getAvailability());
+    this.renderTableRow("PUTimeEnd", statistics.getTotalPuTimeEnd());
+    this.renderTableRow("PUTimeStart", statistics.getTotalPuTimeStart());
+    this.renderTableRow("PUTimeScrapped", statistics.getTotalPuTimeScrapped());
+    this.renderTableRow("Sheduled time", statistics.getShedTime());
+    this.renderTableRow("Planned production time", statistics.getPlanTime());
+    this.renderTableRow("Production time", statistics.getProductionTime());
+    this.renderTableRow("Production time within orders", statistics.getProductionTimeWithinOrders());
+    this.renderTableRow("Total Produced Amount",statistics.getTotalProducedAmount());
 }
 StatisticsWindow.prototype.renderTable = function () {
     var table = document.createElement("table");
