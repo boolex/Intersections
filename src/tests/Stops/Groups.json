@@ -303,19 +303,12 @@
                                 },
                                 {
                                     "changeType": -1,
-                                    "changeDate": "2017-01-01 15:30"
+                                    "changeDate": "2017-01-01 16:30"
                                 },
                                 {
                                     "changeType": 1,
-                                    "changeDate": "2017-01-02 13:30"
-                                },
-                                {
-                                    "changeType": -1,
-                                    "changeDate": "2017-01-02 15:30"
-                                },
-                                {
-                                    "changeType": 1,
-                                    "changeDate": "2017-01-02 16:30"
+                                    "changeDate": "2017-01-01 17:30",
+                                    "calendar": 4
                                 }
                             ]
                         }
