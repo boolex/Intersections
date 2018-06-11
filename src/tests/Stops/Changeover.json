@@ -1,4 +1,5 @@
 ﻿{
+    "now": "2017-01-01 17:30:00",
     "sites": [
         {
             "id": 1,
@@ -161,7 +162,7 @@
             "id": 1,
             "group": 1,
             "name": "change over",
-            "loss" : "availability"
+            "loss": "availability"
         },
         {
             "id": 2,

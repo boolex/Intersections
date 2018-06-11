@@ -79,7 +79,6 @@ ProductionStatistics.prototype.getProductionTimeWithinOrders = function () {
     return new ProductionTimeWithinOrders(
         this.range,
         this.history.getOrderBatches(),
-<<<<<<< HEAD
         new IntersectionSet([/*shifts*/
             this.getIntersections(),
             this.history.getShifts()
@@ -94,11 +93,6 @@ ProductionStatistics.prototype.getProductionTimeWithinOrders = function () {
             this.history.getAvailabilityLossEntries(),
             this.history.getShifts()
         ]).get()
-=======
-        this.history.getShifts(),
-        this.history.getPlannedDowntimeEntries(),
-        this.history.getAvailabilityLossEntries()
->>>>>>> 31f4d00a8f876d4e214f2d68fac9ebdaf76f6cb3
     ).compute();
 }
 ProductionStatistics.prototype.getIntersections = function () {

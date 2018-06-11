@@ -269,6 +269,20 @@
                                             "id": 1001,
                                             "type": 1,
                                             "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:15",
+                                            "to": "2017-01-01 12:45",
+                                            "id": 1002,
+                                            "type": 2,
+                                            "downtime": 0
+                                        },
+                                        {
+                                            "from": "2017-01-01 12:52",
+                                            "to": "2017-01-01 13:45",
+                                            "id": 1003,
+                                            "type": 3,
+                                            "downtime": 0
                                         }
                                     ]
                                 }
@@ -304,12 +318,19 @@
                                 },
                                 {
                                     "changeType": -1,
-                                    "changeDate": "2017-01-01 16:30"
+                                    "changeDate": "2017-01-01 15:30"
                                 },
                                 {
                                     "changeType": 1,
-                                    "changeDate": "2017-01-01 17:30",
-                                    "calendar": 4
+                                    "changeDate": "2017-01-02 13:30"
+                                },
+                                {
+                                    "changeType": -1,
+                                    "changeDate": "2017-01-02 15:30"
+                                },
+                                {
+                                    "changeType": 1,
+                                    "changeDate": "2017-01-02 16:30"
                                 }
                             ]
                         }

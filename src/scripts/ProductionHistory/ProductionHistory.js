@@ -104,7 +104,7 @@ function buildOrderBatches(content) {
     var orderBatches = [];
     getOrderBatches(content).forEach(function (orderBatch, index, array) {
         orderBatches.push({
-            id: orderBatch.id,
+            id: orderBatch.order.id + '_' + orderBatch.id,
             title: "<b>Order_Id:</b> " + orderBatch.order.id + "<br/><b>Start:</b> " + orderBatch.start + "<br/><b>End:</b> " + orderBatch.end + "<br/><b>Duration: </b>" + (Date.parse(orderBatch.end) - Date.parse(orderBatch.start)) / 1000 + " <b>s</b>",
             content: "orderbatch",
             start: orderBatch.start,
@@ -169,7 +169,7 @@ function buildShifts(content) {
     var shifts = [];
     getShiftPeriods(content).forEach(function (shift, index, array) {
         shifts.push({
-            id: "shift_" + shift.start,
+            id: shift.operatorstation.id + "_" + shift.start,
             title: "<b>" + (shift.changeType > 0 ? ("Team_" + shift.changeType) : "Not plan prod") + "</b><br/><b>Start:</b> " + shift.start + "<br/><b>End:</b> " + shift.end + "<br/><b>Duration: </b>" + (Date.parse(shift.end) - Date.parse(shift.end) / 1000) + " <b>s</b>",
             content: ((shift.changeType > 0) ? ("Team_" + shift.changeType) : "Not plan prod"),
             start: shift.start,
@@ -204,7 +204,7 @@ function buildProducedUnits(content) {
     var units = [];
     getProducedUnits(content).forEach(function (unit, index, array) {
         units.push({
-            id: unit.type + "_" + unit.time,
+            id: unit.order.id + '_' + unit.type + "_" + unit.time,
             title: "<b>Order_Id:</b> " + unit.order.id + "<br/><b>Time:</b> " + unit.time,
             content: "Amount: " + unit.amount.toString(),
             start: unit.time,

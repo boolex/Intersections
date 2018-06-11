@@ -73,6 +73,7 @@
 	<div id="header">
 		file: 	<div id="fileName"></div>
 		now:	<div id="scenario_now"></div>
+		<a href="javascript:void(0)" id="download">download</a>
 	</div>
 	<div id="rangePicker"></div>
 	<div id="visualization"></div>
@@ -102,6 +103,41 @@
 <script type="text/javascript">
 	window.onload = function () {
 		loadApp(config.file);
+		document.getElementById('download').addEventListener('click',function(){
+			var js = {
+				"now": "2017-01-01 17:30:00",
+			};
+			download(JSON.stringify(js));
+		});
 	}
 
+	function download(data, file) {
+    file = file || "data.json";
+
+    if (isIE()) {
+        downloadIE(data, file);
+    }
+    else {
+        downloadNotIE(data, file);
+    }
+
+}
+function isIE() {
+    return window.navigator.userAgent.indexOf("MSIE") != -1 || !!window.navigator.userAgent.match(/Trident.*rv\:11\./);
+}
+function downloadIE(data, file) {
+    var c = document.createElement("textarea");
+    c.innerHTML = data;
+    c.setAttribute("style", "position:absolute;left:0px;top:0px;width:100%;height:100%");
+    document.body.appendChild(c);
+
+}
+function downloadNotIE(data, file) {
+    var a = document.createElement("a");
+    a.href = 'data:Application/octet-stream,' + encodeURIComponent(data);
+    a.innerHTML = 'Download ' + file;
+    a.setAttribute("download", file);
+    document.body.appendChild(a);
+    a.click();
+}
 </script>
