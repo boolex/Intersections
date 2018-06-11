@@ -103,11 +103,8 @@
 <script type="text/javascript">
 	window.onload = function () {
 		loadApp(config.file);
-		document.getElementById('download').addEventListener('click',function(){
-			var js = {
-				"now": "2017-01-01 17:30:00",
-			};
-			download(JSON.stringify(js));
+		document.getElementById('download').addEventListener('click',function(){		
+			download(customStringify( window.app.getContextOption('content')));
 		});
 	}
 
@@ -140,4 +137,18 @@ function downloadNotIE(data, file) {
     document.body.appendChild(a);
     a.click();
 }
+var customStringify = function (v) {
+  var cache = new Map();
+  return JSON.stringify(v, function (key, value) {
+    if (typeof value === 'object' && value !== null) {
+      if (cache.get(value)) {
+        // Circular reference found, discard key
+        return;
+      }
+      // Store value in our map
+      cache.set(value, true);
+    }
+    return value;
+  });
+};
 </script>
