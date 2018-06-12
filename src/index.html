@@ -51,11 +51,7 @@
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorer.js"></script>
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorerWindow.js"></script>
 	<script type="text/javascript" src="scripts/Filter.js"></script>
-	<script src="lib/vis-4.21.0/vis-4.21.0/dist/vis.js"></script>
-	<link href="lib/vis-4.21.0/vis-4.21.0/dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
-	<script src="lib/jquery/jquery-1.11.0.min.js"></script>
-	<script src="lib/anytime/anytime.5.2.0.js"></script>
-	<link href="lib/anytime/anytime.5.2.0.css" rel="stylesheet" type="text/css" />
+
 	<script type="text/javascript" src="scripts/iterators/orderbatchesIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/ordersIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/producedUnitsIterator.js"></script>
@@ -64,8 +60,17 @@
 	<script type="text/javascript" src="scripts/iterators/stopsIterator.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script type="text/javascript" src="controller.js"></script>
-
 	<script type="text/javascript" src="config.js"></script>
+
+	<script src="lib/vis-4.21.0/vis-4.21.0/dist/vis.js"></script>
+	<link href="lib/vis-4.21.0/vis-4.21.0/dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+	<script src="lib/jquery/jquery-1.11.0.min.js"></script>
+	<script src="lib/anytime/anytime.5.2.0.js"></script>
+	<link href="lib/anytime/anytime.5.2.0.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 </head>
 
 <body>
@@ -76,7 +81,19 @@
 		<a href="javascript:void(0)" id="download">download</a>
 	</div>
 	<div id="rangePicker"></div>
-	<div id="visualization"></div>
+	<table style="width:100%">
+		<tr>
+			<td style="width:200px">
+				<div id="system-structure">
+
+				</div>
+			</td>
+			<td>
+				<div id="visualization"></div>
+			</td>
+		</tr>
+	</table>
+	
 	<table>
 		<tr>
 			<td style="vertical-align: top">
@@ -103,11 +120,13 @@
 <script type="text/javascript">
 	window.onload = function () {
 		loadApp(config.file);
+		registerDownloadClickHandler();
+	}
+	function registerDownloadClickHandler(){
 		document.getElementById('download').addEventListener('click',function(){		
 			download(customStringify( window.app.getContextOption('content')));
 		});
 	}
-
 	function download(data, file) {
     file = file || "data.json";
 

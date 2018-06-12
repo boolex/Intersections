@@ -68,12 +68,13 @@ function loadApp(file) {
                 actions['statistics'] = true;
                 actions['draw_timeline'] = true;
                 actions['draw_filter_tree'] = true;
-                actions['update_header'] = true;
+                actions['factory_structure'] = true;
+                actions['update_header'] = true;                
             }
             if (actions['file']) {
                 app.getContextOption('file').load(function (content) {
                     app.update({ content: content });
-                });
+                });                
             }
             if (actions['history'] != null) {
                 app.history =
@@ -119,6 +120,16 @@ function loadApp(file) {
             }
             if (actions['update_header']) {
                 window.header.update(app);
+            }
+            if(actions['factory_structure']){
+                $('#system-structure').jstree({ 'core' : {
+                    'data' : [
+                       { "id" : "ajson1", "parent" : "#", "text" : "Simple root node" },
+                       { "id" : "ajson2", "parent" : "#", "text" : "Root node 2" },
+                       { "id" : "ajson3", "parent" : "ajson2", "text" : "Child 1" },
+                       { "id" : "ajson4", "parent" : "ajson2", "text" : "Child 2" },
+                    ]
+                }});
             }
         },
         display: function () {
