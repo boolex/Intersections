@@ -51,6 +51,7 @@
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorer.js"></script>
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorerWindow.js"></script>
 	<script type="text/javascript" src="scripts/Filter.js"></script>
+	<script type="text/javascript" src="scripts/Database.js"></script>
 
 	<script type="text/javascript" src="scripts/iterators/orderbatchesIterator.js"></script>
 	<script type="text/javascript" src="scripts/iterators/ordersIterator.js"></script>
@@ -83,11 +84,19 @@
 	<div id="rangePicker"></div>
 	<table style="width:100%">
 		<tr>
-			<td style="width:200px">
+			<td style="width:200px" rowspan="2">
 				<div id="system-structure">
 
 				</div>
 			</td>
+			<td>
+				<table id="factoryDivisionProperties">
+					<tbody></tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			
 			<td>
 				<div id="visualization"></div>
 			</td>
@@ -128,7 +137,7 @@
 		});
 	}
 	function download(data, file) {
-    file = file || "data.json";
+    file = file || "production.json";
 
     if (isIE()) {
         downloadIE(data, file);

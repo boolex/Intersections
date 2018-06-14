@@ -122,15 +122,108 @@ function loadApp(file) {
                 window.header.update(app);
             }
             if(actions['factory_structure']){
+                var content = app.getContextOption('content');
+
+
                 $('#system-structure').jstree({ 'core' : {
-                    'data' : [
-                       { "id" : "ajson1", "parent" : "#", "text" : "Simple root node" },
-                       { "id" : "ajson2", "parent" : "#", "text" : "Root node 2" },
-                       { "id" : "ajson3", "parent" : "ajson2", "text" : "Child 1" },
-                       { "id" : "ajson4", "parent" : "ajson2", "text" : "Child 2" },
-                    ]
-                }});
+                    'data' : this.jsTreeNodesFromFactoryStructure(content)
+                },
+                    'plugins' : [ "wholerow", "checkbox","contextmenu" ],
+                    "checkbox" : {
+                        "keep_selected_style" : false,
+                        "whole_node":true
+                    },
+                    'contextmenu':{
+                        'items':{
+                            'AddSubdivision':{
+                                title:"Add",
+                                label :"Add subdivision",
+                                action:function(obj){
+                                   var item = getSelectedItem(obj);
+                                   var dbObject = new Database(content).item(item.type,item.id);
+                                }
+                            }
+                        }
+                    },
+                    
+                }).on('loaded.jstree', function() {
+                    $('#system-structure').jstree('open_all');
+                });
+                $("#system-structure").bind(
+                     "select_node.jstree", function(evt, data){
+                         var item = getSelectedItem(data.node.id);
+                         var dbObject = new Database(content).item(item.type, item.id);
+                         showFactoryDivisionProperties(item.type, dbObject);                         
+                     }
+                );
+
+                var showFactoryDivisionProperties=function(type,division){
+                    var tbody =document.getElementById('factoryDivisionProperties').querySelector('tbody');
+                    while (tbody.firstChild) {
+                        tbody.removeChild(tbody.firstChild);
+                    }
+                    Database.properties(type).forEach(function(property){
+                        var tr = document.createElement('tr');
+                        var captionColumn = document.createElement('td');
+                        var valueColumn = document.createElement('td');
+                        captionColumn.innerHTML = property.name;
+                        var inputElement = document.createElement("input");
+                        inputElement.type = property.type;
+                        inputElement.value = division[property.name];
+                        inputElement.onchange=function(){
+                            division[property.name] = inputElement.value;
+                        };
+                        valueColumn.appendChild(inputElement);
+                        tr.appendChild(captionColumn);
+                        tr.appendChild(valueColumn);
+                        tbody.appendChild(tr);
+                    });
+                }
+                var getSelectedItem = function(id){
+                    var parts = id.split('#');
+                    return { type : parts[0], id : parts[1]};
+                }
             }
+        },
+        jsTreeNodesFromFactoryStructure:function(content){
+            var nodes = [];
+            nodes.push(
+                { "id" : "factory", "parent" : "#", "text" : "Factory" }
+            );
+
+            var sites = content.sites;
+            sites.forEach(function(site){
+                nodes.push(
+                    { "id" : "site#"+site.id, "parent" : "factory", "text" : site.name }
+                );
+
+                site.departments.forEach(function(department){
+                    nodes.push(
+                        { "id" : "department#"+department.id, "parent" : "site#"+site.id, "text" : department.name }
+                    );
+
+                    department.operatorstations.forEach(function(operatorStation){
+                        nodes.push(
+                            { 
+                                "id" : "operatorStation#"+operatorStation.id, 
+                                "parent" : "department#"+department.id, 
+                                "text" : (operatorStation.name!=null?operatorStation.name:"[OperatorStation#id="+operatorStation.id+"]")
+                            }
+                        );
+
+                        operatorStation.prodplaces.forEach(function(prodplace){
+                            nodes.push(
+                                { 
+                                    "id" : "prodplace#"+prodplace.id, 
+                                    "parent" : "operatorStation#"+operatorStation.id, 
+                                    "text" : prodplace.name 
+                                }
+                            );
+                        });
+                    });
+                });
+            });
+            return nodes;
         },
         display: function () {
             try {
