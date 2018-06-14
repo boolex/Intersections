@@ -131,7 +131,9 @@ function loadApp(file) {
                     'plugins' : [ "wholerow", "checkbox","contextmenu" ],
                     "checkbox" : {
                         "keep_selected_style" : false,
-                        "whole_node":true
+                        "whole_node":false,
+                        "cascade":"up",
+                        "three_state":false
                     },
                     'contextmenu':{
                         'items':{
