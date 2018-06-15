@@ -39,6 +39,17 @@ function loadApp(file) {
         update: function (options) {
             var actions = {};
             var app = this.app;
+            if (options != null && options.contentModified != null) {
+                actions['factory_structure_update'] = true;
+            }
+            if (options != null && options.file != null) {
+                app.setContext('file', options.file);
+                actions['file'] = true;
+                actions['history'] = true;
+                actions['statistics'] = true;
+                actions['update_timeline'] = true;
+                actions['update_header'] = true;
+            }
             if (options != null && options.file != null) {
                 app.setContext('file', options.file);
                 actions['file'] = true;
@@ -121,13 +132,15 @@ function loadApp(file) {
             if (actions['update_header']) {
                 window.header.update(app);
             }
+            if(actions['factory_structure_update']){
+                $('#system-structure').jstree(true).settings.core.data =  this.jsTreeNodesFromFactoryStructure(app.getContextOption('content'));
+                $('#system-structure').jstree(true).refresh();
+            }
             if(actions['factory_structure']){
                 var content = app.getContextOption('content');
 
-
-                $('#system-structure').jstree({ 'core' : {
-                    'data' : this.jsTreeNodesFromFactoryStructure(content)
-                },
+                $('#system-structure').jstree({ 
+                    'core' : {'data' : this.jsTreeNodesFromFactoryStructure(content)},
                     'plugins' : [ "wholerow", "checkbox","contextmenu" ],
                     "checkbox" : {
                         "keep_selected_style" : false,
@@ -154,12 +167,14 @@ function loadApp(file) {
                 $("#system-structure").bind(
                      "select_node.jstree", function(evt, data){
                          var item = getSelectedItem(data.node.id);
-                         var dbObject = new Database(content).item(item.type, item.id);
-                         showFactoryDivisionProperties(item.type, dbObject);                         
+                         var db = new Database(content);
+                         var dbObject = db.item(item.type, item.id);
+                         showFactoryDivisionProperties(item.type, dbObject, db, app);                         
                      }
                 );
 
-                var showFactoryDivisionProperties=function(type,division){
+                var showFactoryDivisionProperties=function(type, division, db,app){
+                    
                     var tbody =document.getElementById('factoryDivisionProperties').querySelector('tbody');
                     while (tbody.firstChild) {
                         tbody.removeChild(tbody.firstChild);
@@ -171,13 +186,32 @@ function loadApp(file) {
                         captionColumn.innerHTML = property.name;
                         var inputElement = document.createElement("input");
                         inputElement.type = property.type;
-                        inputElement.value = division[property.name];
+                        if(division[property.name] == null) {
+                            inputElement.value = "";
+                        }
+                        else {
+                            inputElement.value = division[property.name];
+                        }
                         inputElement.onchange=function(){
                             division[property.name] = inputElement.value;
                         };
                         valueColumn.appendChild(inputElement);
                         tr.appendChild(captionColumn);
                         tr.appendChild(valueColumn);
+                        tbody.appendChild(tr);
+                    });
+                    db.actions(type, division? division.id:null).forEach(function(action){
+                        var tr = document.createElement('tr');
+                        var buttonColumn = document.createElement('td');
+                        var b = document.createElement('button');
+                        b.innerHTML = action.name;
+                        b.onclick = function(){
+                           return action.action(function(){
+                            app.update({contentModified:true});
+                           });
+                        };
+                        buttonColumn.appendChild(b);
+                        tr.appendChild(buttonColumn);
                         tbody.appendChild(tr);
                     });
                 }
@@ -198,33 +232,38 @@ function loadApp(file) {
                 nodes.push(
                     { "id" : "site#"+site.id, "parent" : "factory", "text" : site.name }
                 );
-
-                site.departments.forEach(function(department){
-                    nodes.push(
-                        { "id" : "department#"+department.id, "parent" : "site#"+site.id, "text" : department.name }
-                    );
-
-                    department.operatorstations.forEach(function(operatorStation){
+                if(site.departments){
+                    site.departments.forEach(function(department){
                         nodes.push(
-                            { 
-                                "id" : "operatorStation#"+operatorStation.id, 
-                                "parent" : "department#"+department.id, 
-                                "text" : (operatorStation.name!=null?operatorStation.name:"[OperatorStation#id="+operatorStation.id+"]")
-                            }
+                            { "id" : "department#"+department.id, "parent" : "site#"+site.id, "text" : department.name }
                         );
 
-                        operatorStation.prodplaces.forEach(function(prodplace){
-                            nodes.push(
-                                { 
-                                    "id" : "prodplace#"+prodplace.id, 
-                                    "parent" : "operatorStation#"+operatorStation.id, 
-                                    "text" : prodplace.name 
+                        if(department.operatorstations){
+                            department.operatorstations.forEach(function(operatorStation){
+                                nodes.push(
+                                    { 
+                                        "id" : "operatorStation#"+operatorStation.id, 
+                                        "parent" : "department#"+department.id, 
+                                        "text" : (operatorStation.name!=null?operatorStation.name:"[OperatorStation#id="+operatorStation.id+"]")
+                                    }
+                                );
+
+                                if(operatorStation.prodplaces){
+                                    operatorStation.prodplaces.forEach(function(prodplace){
+                                        nodes.push(
+                                            { 
+                                                "id" : "prodplace#"+prodplace.id, 
+                                                "parent" : "operatorStation#"+operatorStation.id, 
+                                                "text" : prodplace.name 
+                                            }
+                                        );
+                                    });
                                 }
-                            );
-                        });
+                            });
+                        }
                     });
-                });
-            });
+                }
+            });        
             return nodes;
         },
         display: function () {
