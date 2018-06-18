@@ -126,9 +126,10 @@ Database.prototype.actions = function(type, id){
                         db.content.sites=[];
                     }
 
+                    var newItemId = db.getId('site');
                     var item = {
-                        'id' : 1,
-                        'name' : "site1",
+                        'id' : newItemId,
+                        'name' : 'site_' + newItemId,
                         'sortorderno' : '0'
                     };
 
@@ -151,9 +152,10 @@ Database.prototype.actions = function(type, id){
                         site.departments=[];
                     }
 
+                    var newItemId = db.getId('department');
                     var item = {
-                        'id' : 1,
-                        'name' : "department1",
+                        'id' : newItemId,
+                        'name' : 'department_' + newItemId,
                         'sortorderno' : '0'
                     };
 
@@ -175,10 +177,10 @@ Database.prototype.actions = function(type, id){
                     if(department.operatorstations==null){
                         department.operatorstations=[];
                     }
-
+                    var newItemId = db.getId('operatorStation');
                     var item = {
-                        'id' : 1,
-                        'name' : "operatorstation1",
+                        'id' : newItemId,
+                        'name' : "operatorstation_"+newItemId,
                         'sortorderno' : '0'
                     };
 
@@ -201,9 +203,10 @@ Database.prototype.actions = function(type, id){
                         operatorstation.prodplaces=[];
                     }
 
+                    var newItemId = db.getId('prodplace');
                     var item = {
-                        'id' : 1,
-                        'name' : "prodplace1",
+                        'id' : newItemId,
+                        'name' : 'prodplace_'+newItemId,
                         'sortorderno' : '0'
                     };
 
@@ -217,4 +220,48 @@ Database.prototype.actions = function(type, id){
         ];
     }
     return [];
+}
+Database.prototype.getId = function(type){
+    if(type == 'site'){
+        return 1 + Math.max.apply(
+            null, 
+            this.content.sites.map(function(x){ return x.id;})
+        );        
+    }
+    else if(type == 'department'){   
+        return 1 + Math.max.apply(
+            null,
+            this.departments().map(function(x){return x.id})
+        );     
+    }
+    else if(type == 'operatorStation'){
+        return 1 + Math.max.apply(
+            null,
+            this.operatorStations().map(function(x){return x.id})
+        );   
+    }
+    else if(type == 'prodplace'){
+        return 1 + Math.max.apply(
+            null,
+            this.prodplaces().map(function(x){return x.id})
+        );   
+    }
+}
+Database.prototype.sites = function(){
+    return this.content.sites;
+}
+Database.prototype.departments = function(){
+    return this.sites()
+        .map(function(site){return site.departments?site.departments:[]; })
+        .reduce(function(a, b){ return a.concat(b); });
+}
+Database.prototype.operatorStations=function(){
+    return this.departments()
+        .map(function(department){return department.operatorStations?department.operatorStations:[]; })
+        .reduce(function(a, b){ return a.concat(b); });
+}
+Database.properties.prodplaces=function(){
+    return this.operatorStations()
+        .map(function(operatorStation){return operatorStation.prodplaces?operatorStation.prodplaces:[]; })
+        .reduce(function(a, b){ return a.concat(b); });
 }

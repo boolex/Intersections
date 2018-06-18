@@ -5,13 +5,13 @@ function loadApp(file) {
         document.getElementById("header"),
         null
     ).render();
-    window.fileExplorer = new FileExplorerWindow(
-        document.getElementById("fileExplorer"),
-        new FileExplorer(),
-        function (file) {
-            app.update({ file: file });
-        }
-    ).render();
+    // window.fileExplorer = new FileExplorerWindow(
+    //     document.getElementById("fileExplorer"),
+    //     new FileExplorer(),
+    //     function (file) {
+    //         app.update({ file: file });
+    //     }
+    // ).render();
     window.statisticsWindow = new StatisticsWindow(
         document.getElementById("statisticsWindow")
     ).render();
