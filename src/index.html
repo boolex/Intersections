@@ -30,6 +30,7 @@
 	<script type="text/javascript" src="scripts/ProductionHistory/ProductionHistory.js"></script>
 	<script type="text/javascript" src="scripts/ProductionHistory/ProductionHistoryWithinPeriod.js"></script>
 	<script type="text/javascript" src="scripts/ProductionHistory/FilteredProducitonHistoryWithinPeriodWithIntersections.js"></script>
+	<script type="text/javascript" src="scripts/ProductionHistory/ModifiedHistory.js"></script>
 	<script type="text/javascript" src="scripts/Windows/Header/HeaderPanel.js"></script>
 
 	<script type="text/javascript" src="scripts/framework/Tree/Tree.js"></script>
@@ -47,6 +48,9 @@
 	<script type="text/javascript" src="scripts/Windows/ProductionStatistics/ProductionStatistics.js"></script>
 	<script type="text/javascript" src="scripts/Windows/ProductionStatistics/StatisticsWindow.js"></script>
 	<link rel="stylesheet" type="text/css" href="scripts/Windows/ProductionStatistics/style.css">
+
+	<script type="text/javascript" src="scripts/Windows/Logs/LogsWindow.js"></script>
+	<script type="text/javascript" src="scripts/Windows/Logs/Logger.js"></script>
 
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorer.js"></script>
 	<script type="text/javascript" src="scripts/Windows/FileExplorer/FileExplorerWindow.js"></script>
@@ -80,6 +84,7 @@
 		file: 	<div id="fileName"></div>
 		now:	<div id="scenario_now"></div>
 		<a href="javascript:void(0)" id="download">download</a>
+		<button id="save">save</button>
 	</div>
 	<div id="rangePicker"></div>
 	<table style="width:100%">
@@ -97,7 +102,7 @@
 		</tr>
 		<tr>
 			
-			<td colspan="2">
+			<td colspan="3">
 				<div id="visualization"></div>
 			</td>
 		</tr>
@@ -125,6 +130,13 @@
 						</td>
 					</tr>
 				</table>
+			</td>
+			<td style="vertical-align: top;width:700px;">
+				<div id="logsWindow" style="width:100%;height:500px;overflow-y: scroll; background-color: #000080;color:lightcyan;padding: 5px;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
+					<table id="logs">
+						<tr></tr>
+					</table>		 
+				</div>
 			</td>
 		</tr>
 	</table>

@@ -15,6 +15,11 @@ function loadApp(file) {
     window.statisticsWindow = new StatisticsWindow(
         document.getElementById("statisticsWindow")
     ).render();
+    window.logsWindow = new LogsWindow(
+        document.getElementById("logsWindow")
+    ).render();
+    window.logger = new Logger(window.logsWindow);
+
     window.app = new App({
         context: {
             range: {
@@ -35,6 +40,9 @@ function loadApp(file) {
         loading: function () {
         },
         render: function () {
+        },
+        database : function(){
+            return window._db || (window._db = new Database(this.app.getContextOption('content')));
         },
         update: function (options) {
             var actions = {};
@@ -80,7 +88,25 @@ function loadApp(file) {
                 actions['draw_timeline'] = true;
                 actions['draw_filter_tree'] = true;
                 actions['factory_structure'] = true;
-                actions['update_header'] = true;                
+                actions['update_header'] = true;      
+                
+                document.getElementById('save').onclick = function(){
+                    try{
+                        if(!window.selectedProdplace){
+                            return;
+                        }
+                        var prodplace = window.selectedProdplace;
+
+                        app.config.database().set(prodplace.id, new ModifiedHistory(window.timeline.timeLine.itemsData));
+
+                        app.setContext('content', app.config.database().content);
+                        window.logger.log('saved');
+                    }
+                    catch(e){
+                        window.logger.error(e);
+                    }
+
+                }
             }
             if (actions['file']) {
                 app.getContextOption('file').load(function (content) {
@@ -111,7 +137,8 @@ function loadApp(file) {
                     new Timeline(
                         app.history,
                         null,
-                        app.getContextOption('content').now
+                        app.getContextOption('content').now,
+                        window.logger
                     ).draw(document.getElementById('visualization'));
             }
             if (actions['draw_filter_tree']) {
@@ -155,7 +182,7 @@ function loadApp(file) {
                                 label :"Add subdivision",
                                 action:function(obj){
                                    var item = getSelectedItem(obj);
-                                   var dbObject = new Database(content).item(item.type,item.id);
+                                   var dbObject = app.config.database().item(item.type,item.id);
                                 }
                             }
                         }
@@ -167,15 +194,22 @@ function loadApp(file) {
                 $("#system-structure").bind(
                      "select_node.jstree", function(evt, data){
                          var item = getSelectedItem(data.node.id);
-                         var db = new Database(content);
+                        
+                         var db = app.config.database();
                          var dbObject = db.item(item.type, item.id);
+
+                         window.selectedFactoryItem = dbObject;
+                         if(item.type == 'prodplace'){
+                            window.selectedProdplace = dbObject;
+                         }
+
                          showFactoryDivisionProperties(item.type, dbObject, db, app);                         
                      }
                 );
 
                 var showFactoryDivisionProperties=function(type, division, db,app){
                     
-                    var tbody =document.getElementById('factoryDivisionProperties').querySelector('tbody');
+                    var tbody = document.getElementById('factoryDivisionProperties').querySelector('tbody');
                     while (tbody.firstChild) {
                         tbody.removeChild(tbody.firstChild);
                     }
@@ -283,5 +317,5 @@ function loadApp(file) {
         function (range) {
             window.app.update({ range: range });
         }
-    ).render();
+    ).render();    
 }

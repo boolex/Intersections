@@ -1,23 +1,58 @@
-var Timeline = function (history, groups, now) {
+var Timeline = function (history, groups, now, logger) {
     this.history = history;
     this.groups = groups;
     this.now = now;
+    this.logger = logger;
 }
 Timeline.prototype.draw = function (container) {
+   this.visualize(container);
+   this.registerEventHandlers();
+   this.registerSystemEvents(this.timeLine, this.logger);
+   return this;
+}
+Timeline.prototype.visualize=function(container){
     container.innerHTML = "";
     this.timeLine = new vis.Timeline(
         container,
         new vis.DataSet(this.history.get()),
-					/*options*/{
-            showTooltips: true
-        }
+		this.timeLineOptions(this)
     );
     if (this.now != null) {
         this.timeLine.addCustomTime(this.now, "now");
     }
 
-    this.timeLine.setGroups(new Filter(this.history).get());
+    this.timeLine.setGroups(new Filter(this.history).get());   
+
     return this;
+}
+Timeline.prototype.registerSystemEvents = function(timeline, logger){
+    timeline.itemsData.on('*', function (event, properties) {
+        logger.system("event : " + JSON.stringify(event) + "; Properties : " + JSON.stringify(properties));
+      });     
+}
+Timeline.prototype.timeLineOptions = function(timeline){
+    return {
+        showTooltips: true,
+        editable: true,
+        onUpdate: function(item, callback){ timeline.itemUpdated(item, callback, timeline.logger); },
+        onMove: function(item, callback){ timeline.itemMoved(item, callback, timeline.logger); }      
+    };
+}
+Timeline.prototype.itemUpdated = function(item, callback, logger){
+    logger.log('item updated');
+    callback(item);
+}
+Timeline.prototype.itemMoved = function(item, callback, logger){
+    logger.log('item moved');
+    callback(item);
+}
+Timeline.prototype.registerEventHandlers = function(){
+    //http://visjs.org/docs/timeline/#Events
+      (function(timeline){
+        timeline.timeLine.on('doubleClick', function (properties) {
+            timeline.logger.log('doubleClick');
+        });
+      })(this);
 }
 Timeline.prototype.updateGroups = function (history, groups) {
     this.history = history;
@@ -51,3 +86,4 @@ Timeline.dependencies = [];
 Timeline.dependencies.push("vis.TimeLine");
 Timeline.dependencies.push("vis.DataSet");
 Timeline.dependencies.push("Filter");
+

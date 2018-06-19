@@ -51,28 +51,9 @@ Database.prototype.item=function(type,id){
         });
     }
     if(type == "prodplace"){
-        this.content.sites.forEach(function(site){
-            if(!site.departments){
-                return;
-            }
-            site.departments.forEach(function(department){
-                if(!department.operatorstations){
-                    return;
-                }
-                department.operatorstations.forEach(function(operatorstation){
-                    if(!operatorstation.prodplaces){
-                        return;
-                    }
-                    operatorstation.prodplaces.forEach(function(prodplace){
-                        if(prodplace.id == id){
-                            result = prodplace;
-                            return;
-                        }
-                    });                    
-                });               
-            });
-           
-        });
+        return this.prodplaces().find(function(prodplace){
+            return prodplace.id == id;
+        })
     }
 
     if(result){
@@ -237,7 +218,7 @@ Database.prototype.getId = function(type){
     else if(type == 'operatorStation'){
         return 1 + Math.max.apply(
             null,
-            this.operatorStations().map(function(x){return x.id})
+            this.operatorstations().map(function(x){return x.id})
         );   
     }
     else if(type == 'prodplace'){
@@ -253,15 +234,42 @@ Database.prototype.sites = function(){
 Database.prototype.departments = function(){
     return this.sites()
         .map(function(site){return site.departments?site.departments:[]; })
-        .reduce(function(a, b){ return a.concat(b); });
+        .reduce(function(a, b){ return a.concat(b); }, []);
 }
-Database.prototype.operatorStations=function(){
+Database.prototype.operatorstations=function(){
     return this.departments()
-        .map(function(department){return department.operatorStations?department.operatorStations:[]; })
-        .reduce(function(a, b){ return a.concat(b); });
+        .map(function(department){return department.operatorstations?department.operatorstations:[]; })
+        .reduce(function(a, b){ return a.concat(b); }, []);
 }
-Database.properties.prodplaces=function(){
-    return this.operatorStations()
-        .map(function(operatorStation){return operatorStation.prodplaces?operatorStation.prodplaces:[]; })
-        .reduce(function(a, b){ return a.concat(b); });
+Database.prototype.prodplaces = function(){
+    return this.operatorstations()
+        .map(function(operatorstation){
+            return operatorstation.prodplaces ?
+                operatorstation.prodplaces.map(function(prodplace){var x = prodplace;x.operatorstartion=operatorstation;return x;}):
+                []; 
+        })
+        .reduce(function(a, b){ return a.concat(b); }, []);
+}
+Database.prototype.set = function(prodplaceId, data){
+    data = data.JSON();
+    var prodplace = this.item('prodplace', prodplaceId);
+
+    var orderbatches = data.orderbatches.map(function(ob){ob.orderId = ob.order.id;return ob;}).groupBy('orderId');
+    for (var orderId in orderbatches) {
+        if (orderbatches.hasOwnProperty(orderId)) {
+           data.orders.find(function(x){return x.id == parseInt(orderId)}).batches = orderbatches[orderId];
+        }
+    }
+
+    prodplace.stops = data.stops;
+    var noProdPeriods = [];
+    for(var i = 0; i < data.shifts.length; i++){
+        if(i > 0 && data.shifts[i].start > data.shifts[i-1].end){
+            noProdPeriods.push({changeType:-1,start:data.shifts[i-1].end, end:data.shifts[i].start});
+        }
+    }
+    data.shifts = data.shifts.concat(noProdPeriods);
+    prodplace.operatorstartion.shifts = data.shifts.map(function(x){var shift = {}; shift.changeType = x.changeType; shift.changeDate = x.start;return shift; });
+    prodplace.operatorstartion.shifts.push({changeType:-1,changeDate:'2010-01-01'});
+    prodplace.operatorstartion.orders = data.orders;
 }

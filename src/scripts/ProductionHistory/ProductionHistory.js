@@ -95,7 +95,8 @@ function buildOrders(content) {
                 orderId: order.id
             },
             className: 'order',
-            operatorStationId: order.operatorstation.id
+            operatorStationId: order.operatorstation.id,
+            source:order
         });
     });
     return orders;
@@ -119,7 +120,8 @@ function buildOrderBatches(content) {
                 articleNumber: orderBatch.order.articleNumber
             },
             className: 'orderbatch',
-            operatorStationId: orderBatch.operatorstation.id
+            operatorStationId: orderBatch.operatorstation.id,
+            source: orderBatch
         });
     });
     return orderBatches;
@@ -149,8 +151,9 @@ function buildStops(content) {
                 "group": (stop.type == null ? "uncoded" : ('[id=' + getTypeProperty(content, stop.type, 'group') + ']')),
                 "Start": stop.from,
                 "End": stop.to,
-                "Duration": (Date.parse(stop.to) - Date.parse(stop.from)) / 1000 + " <b>s</b>"
+                "Duration": (Date.parse(stop.to) - Date.parse(stop.from)) / 1000 + " <b>s</b>"               
             }),
+            source : stop,
             start: stop.from,
             end: stop.to,
             group: "S" + stop.site.id
@@ -181,6 +184,7 @@ function buildShifts(content) {
             tags: {
                 name: getTeamName(content, shift.changeType)
             },
+            source:shift,
             className: 'shift',
             duration: (Date.parse(shift.end) - Date.parse(shift.start)) / 1000
         });
