@@ -5,9 +5,19 @@ Logger.prototype.log = function(message){
    this.output(message, 'white');
 }
 Logger.prototype.system = function(message){
-    this.output(message, 'grey');
+    this.output(message, 'yellow');
 }
-Logger.prototype.output = function(message, textcolor){
+Logger.prototype.error = function(message){
+    this.output(message, 'red');
+ }
+ Logger.prototype.debug = function(message){
+    this.output(message, 'lightgrey', 2);
+}
+
+Logger.prototype.output = function(message, textcolor, loglevel){
+    if(loglevel && window.loglevel < loglevel ){
+        return;
+    }
     var tr = document.createElement('tr');
     document.getElementById('logs').querySelector('tbody').appendChild(tr);
   

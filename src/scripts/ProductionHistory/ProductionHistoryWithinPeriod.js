@@ -11,8 +11,11 @@ ProductionHistoryWithinPeriod.prototype.get = function () {
 ProductionHistoryWithinPeriod.prototype.getEvents = function () {
     return (this.itemsLimitedByRange = this.itemsLimitedByRange || this.getItemsLimitedByRange());
 }
+ProductionHistoryWithinPeriod.prototype.Items = function(){
+    return ProductionHistory.prototype.get.apply(this, arguments);
+}
 ProductionHistoryWithinPeriod.prototype.getItemsLimitedByRange = function () {
-    var items = ProductionHistory.prototype.get.apply(this, arguments);
+    var items = this.Items();
     var itemsLimitedByRange = [];
     var ctx = { from: this.range.from, to: this.range.to };
     var withinDateRange = function (fromStr, toStr) {

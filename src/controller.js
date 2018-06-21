@@ -18,6 +18,8 @@ function loadApp(file) {
     window.logsWindow = new LogsWindow(
         document.getElementById("logsWindow")
     ).render();
+    window.loglevel = 2; /*0 - exceptions, 1 - warnings, 2 - debug */
+    window.hideErrors = false;
     window.logger = new Logger(window.logsWindow);
 
     window.app = new App({
@@ -108,20 +110,101 @@ function loadApp(file) {
 
                 }
             }
-            if (actions['file']) {
+            if(options != null && options.checkedFactoryDivision != null){
+                if(options.checkedFactoryDivision.type == 'prodplace'){
+                    actions['checked_prodplace'] = true;
+                }
+            }
+            if(options != null && options.uncheckedFactoryDivision!= null){
+                if(options.uncheckedFactoryDivision.type == 'prodplace'){
+                    actions['unchecked_prodplace'] = true;
+                }
+            }
+            if(options != null && options.selectedFactoryDivision != null){
+                actions['selected_division'] = true;
+                if(options.selectedItem.type=='prodplace'){
+                    actions['selected_prodplace'] = true;
+                    actions['history'] = true;
+                    actions['draw_timeline'] = true;
+                   // window.checkedFactoryDivisions = [];
+                  //  actions['checked_prodplace'] = true;
+                   // options.checkedFactoryDivision = options.selectedFactoryDivision;
+                }
+            }
+            if(actions['selected_division']){                
+                try{           
+                    window.logger.debug('selected_division');
+
+                    window.selectedFactoryItem = options.selectedFactoryDivision;
+                    showFactoryDivisionProperties(options.selectedItem.type, options.selectedFactoryDivision, app.config.database(), app);   
+                }
+                catch(e){
+                    window.logger.error(e);
+                    if(!window.hideErrors){throw e;}
+                }
+            }
+            if(actions['selected_prodplace']){             
+                try{                                                                      
+                    window.selectedProdplace = options.selectedFactoryDivision;               
+                    
+                    window.logger.debug('action: [selected_prodplace]. Prodplace: ' + window.selectedProdplace.id);   
+                }
+                catch(e){
+                    window.logger.error(e);
+                    if(!window.hideErrors){throw e;}
+                }
+            }
+            if(actions['checked_prodplace']){
+                try{                      
+                    if(!window.checkedFactoryDivisions){
+                        window.checkedFactoryDivisions = [];
+                    }
+                    if(window.checkedFactoryDivisions.indexOf(options.checkedFactoryDivision.id) == -1){
+                        window.checkedFactoryDivisions.push(options.checkedFactoryDivision.id)
+                    }
+                    window.logger.debug('action: [checked_prodplace]. prodplaces: ' + window.checkedFactoryDivisions.join());   
+                }
+                catch(e){
+                    window.logger.error(e);
+                    if(!window.hideErrors){throw e;}
+                }
+            }            
+            if(actions['unchecked_prodplace']){
+                try{                      
+                    if(!window.checkedFactoryDivisions){
+                        window.checkedFactoryDivisions = [];
+                    }
+                    if(window.checkedFactoryDivisions.indexOf(options.uncheckedFactoryDivision.id) >= 0){
+                        window.checkedFactoryDivisions.splice(
+                            window.checkedFactoryDivisions.indexOf(options.uncheckedFactoryDivision.id),
+                            1
+                        );
+                    }
+                    window.logger.debug('action: [checked_prodplace]. prodplaces: ' + window.checkedFactoryDivisions.join());   
+                }
+                catch(e){
+                    window.logger.error(e);
+                    if(!window.hideErrors){throw e;}
+                }
+            }
+            if (actions['file']) {                
                 app.getContextOption('file').load(function (content) {
                     app.update({ content: content });
                 });                
             }
-            if (actions['history'] != null) {
-                app.history =
-                    new FilteredProducitonHistoryWithinPeriodWithIntersections(
-                        app.getContextOption('content'),
-                        app.getContextOption('range'),
-                        app.getContextOption('selectedGroups') || (window.page.getParameter('groups') || '').split(';')
-                    );
+            if (actions['history'] != null) {   
+                if(window.selectedProdplace){
+                    app.history =
+                    //new FilteredProducitonHistoryWithinPeriodWithIntersections(
+                        new FilteredProducitonHistoryWithinPeriodWithIntersectionsOnProdplace(
+                            app.getContextOption('content'),
+                            app.getContextOption('range'),
+                            app.getContextOption('selectedGroups') || (window.page.getParameter('groups') || '').split(';'),
+                            window.selectedProdplace.id
+                        );
+                }
             }
-            if (actions['statistics']) {
+            if (actions['statistics'] && false) {
                 window.statisticsWindow.render(
                     new ProductionStatistics(app.history, app.getContextOption('range'))
                 );
@@ -133,15 +216,24 @@ function loadApp(file) {
                 );
             }
             if (actions['draw_timeline']) {
-                window.timeline =
-                    new Timeline(
-                        app.history,
-                        null,
-                        app.getContextOption('content').now,
-                        window.logger
-                    ).draw(document.getElementById('visualization'));
+               try{
+                   if(window.selectedProdplace){
+                        window.logger.debug('action: [draw_timeline].');
+                        window.timeline =
+                            new Timeline(
+                                app.history,
+                                null,
+                                app.getContextOption('content').now,
+                                window.logger
+                            ).draw(document.getElementById('visualization'));
+                    }
+               }
+               catch(e){
+                   window.logger.error(e);
+                   if(!window.hideErrors){throw e;}
+               }
             }
-            if (actions['draw_filter_tree']) {
+            if (actions['draw_filter_tree'] && false) {
                 document.getElementById("groups").innerHTML = "";
                 window.filtersTree = new SelectableHtmlTree(
                     new Filter(app.history).get(),
@@ -173,7 +265,8 @@ function loadApp(file) {
                         "keep_selected_style" : false,
                         "whole_node":false,
                         "cascade":"up",
-                        "three_state":false
+                        "three_state":false,
+                        "tie_selection":false
                     },
                     'contextmenu':{
                         'items':{
@@ -192,63 +285,35 @@ function loadApp(file) {
                     $('#system-structure').jstree('open_all');
                 });
                 $("#system-structure").bind(
-                     "select_node.jstree", function(evt, data){
-                         var item = getSelectedItem(data.node.id);
-                        
-                         var db = app.config.database();
-                         var dbObject = db.item(item.type, item.id);
-
-                         window.selectedFactoryItem = dbObject;
-                         if(item.type == 'prodplace'){
-                            window.selectedProdplace = dbObject;
-                         }
-
-                         showFactoryDivisionProperties(item.type, dbObject, db, app);                         
+                     "select_node.jstree", function(evt, data){                       
+                        (function(item){
+                            app.update({
+                                selectedFactoryDivision : app.config.database().item(item.type, item.id), 
+                                selectedItem : item
+                            });         
+                        })(getSelectedItem(data.node.id))                                     
                      }
                 );
 
-                var showFactoryDivisionProperties=function(type, division, db,app){
-                    
-                    var tbody = document.getElementById('factoryDivisionProperties').querySelector('tbody');
-                    while (tbody.firstChild) {
-                        tbody.removeChild(tbody.firstChild);
+                $("#system-structure").bind(
+                    "check_node.jstree", function(node, selected, event){                       
+                       (function(item){
+                           app.update({
+                              checkedFactoryDivision : item
+                           });         
+                       })(getSelectedItem(selected.node.id))                                     
                     }
-                    Database.properties(type).forEach(function(property){
-                        var tr = document.createElement('tr');
-                        var captionColumn = document.createElement('td');
-                        var valueColumn = document.createElement('td');
-                        captionColumn.innerHTML = property.name;
-                        var inputElement = document.createElement("input");
-                        inputElement.type = property.type;
-                        if(division[property.name] == null) {
-                            inputElement.value = "";
-                        }
-                        else {
-                            inputElement.value = division[property.name];
-                        }
-                        inputElement.onchange=function(){
-                            division[property.name] = inputElement.value;
-                        };
-                        valueColumn.appendChild(inputElement);
-                        tr.appendChild(captionColumn);
-                        tr.appendChild(valueColumn);
-                        tbody.appendChild(tr);
-                    });
-                    db.actions(type, division? division.id:null).forEach(function(action){
-                        var tr = document.createElement('tr');
-                        var buttonColumn = document.createElement('td');
-                        var b = document.createElement('button');
-                        b.innerHTML = action.name;
-                        b.onclick = function(){
-                           return action.action(function(){
-                            app.update({contentModified:true});
-                           });
-                        };
-                        buttonColumn.appendChild(b);
-                        tr.appendChild(buttonColumn);
-                        tbody.appendChild(tr);
-                    });
+               );
+               $("#system-structure").bind(
+                "uncheck_node.jstree", function(node, selected, event){                       
+                   (function(item){
+                       app.update({
+                          uncheckedFactoryDivision : item
+                       });         
+                   })(getSelectedItem(selected.node.id))                                     
                 }
+           );
+
                 var getSelectedItem = function(id){
                     var parts = id.split('#');
                     return { type : parts[0], id : parts[1]};
@@ -319,3 +384,56 @@ function loadApp(file) {
         }
     ).render();    
 }
+
+
+var showFactoryDivisionProperties=function(type, division, db,app){
+                    
+    var tbody = document.getElementById('factoryDivisionProperties').querySelector('tbody');
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
+    Database.properties(type).forEach(function(property){
+        var tr = document.createElement('tr');
+        var captionColumn = document.createElement('td');
+        var valueColumn = document.createElement('td');
+        captionColumn.innerHTML = property.name;
+        var inputElement = document.createElement("input");
+        inputElement.type = property.type;
+        if(division[property.name] == null) {
+            inputElement.value = "";
+        }
+        else {
+            inputElement.value = division[property.name];
+        }
+        inputElement.onchange=function(){
+            division[property.name] = inputElement.value;
+        };
+        valueColumn.appendChild(inputElement);
+        tr.appendChild(captionColumn);
+        tr.appendChild(valueColumn);
+        tbody.appendChild(tr);
+    });
+    db.actions(type, division? division.id:null).forEach(function(action){
+        var tr = document.createElement('tr');
+        var buttonColumn = document.createElement('td');
+        var b = document.createElement('button');
+        b.innerHTML = action.name;
+        b.onclick = function(){
+           return action.action(function(){
+            app.update({contentModified:true});
+           });
+        };
+        buttonColumn.appendChild(b);
+        tr.appendChild(buttonColumn);
+        tbody.appendChild(tr);
+    });
+}
+// var showProdplaces = function(){
+//      window.timeline =
+//                     new Timeline(
+//                         app.history,
+//                         null,
+//                         app.getContextOption('content').now,
+//                         window.logger
+//                     ).draw(document.getElementById('visualization'));
+// }

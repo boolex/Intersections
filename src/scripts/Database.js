@@ -269,7 +269,23 @@ Database.prototype.set = function(prodplaceId, data){
         }
     }
     data.shifts = data.shifts.concat(noProdPeriods);
-    prodplace.operatorstartion.shifts = data.shifts.map(function(x){var shift = {}; shift.changeType = x.changeType; shift.changeDate = x.start;return shift; });
-    prodplace.operatorstartion.shifts.push({changeType:-1,changeDate:'2010-01-01'});
+    prodplace.operatorstartion.shifts = data.shifts.map(function(shift){return calendarHistory(shift); });
+    
+    prodplace.operatorstartion.shifts.push({
+        changeType: -1,
+        changeDate : data.shifts.reduce(function(min, current){
+            return min < new Date(Date.parse(current.start))? min : new Date(Date.parse(data.shifts[0].start))
+        }).yyyymmddhhmmss()
+    });
+    
+    prodplace.operatorstartion.shifts = prodplace.operatorstartion.shifts.sort(function(a, b){
+        return new Date(Date.parse(a.changeDate)) > new Date(Date.parse(b.changeDate));
+    });
     prodplace.operatorstartion.orders = data.orders;
+}
+function calendarHistory(shift){
+    return {
+        changeType : shift.changeType,
+        changeDate : shift.end
+    };
 }

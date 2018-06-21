@@ -11,6 +11,7 @@ var getProducedUnits = function (content) {
 			department.operatorstations.forEach(function (operatorstation, index, array) {
 			if(operatorstation.orders==null)
 			return;
+			operatorstation.prodplaces.forEach(function(prodplace){
 				operatorstation.orders.forEach(function (order, index, array) {
 					if(order.producedUnits){
 						order.producedUnits.forEach(function (unit, index, array) {
@@ -18,6 +19,7 @@ var getProducedUnits = function (content) {
 							unit.department = department;
 							unit.site = site;
 							unit.order = order;
+							unit.prodplace = prodplace;
 							unit.type='PUTimeEnd';
 							units.push(unit);
 						});
@@ -28,6 +30,7 @@ var getProducedUnits = function (content) {
 							unit.department = department;
 							unit.site = site;
 							unit.order = order;
+							unit.prodplace = prodplace;
 							unit.type='PUTimeScrapped';
 							units.push(unit);
 						});
@@ -38,11 +41,13 @@ var getProducedUnits = function (content) {
 							unit.department = department;
 							unit.site = site;
 							unit.order = order;
+							unit.prodplace = prodplace;
 							unit.type='PUTimeStart';
 							units.push(unit);
 						});
 					}
 				});
+			});				
 			});
 		});
 	});

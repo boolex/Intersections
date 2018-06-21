@@ -9,6 +9,7 @@ var getShiftPeriods = function (content) {
 		if (shift.changeType > 0) {
 			shiftPeriods.push({
 				changeType: shift.changeType,
+				prodplace:shift.prodplace,
 				start: (prevShift == null ? shift.changeDate : prevShift.changeDate),
 				end: shift.changeDate,
 				site: shift.site,

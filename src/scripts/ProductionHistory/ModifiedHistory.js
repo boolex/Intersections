@@ -31,7 +31,10 @@ ModifiedHistory.prototype.addOrderBatch = function(result , item){
     return result;
 }
 ModifiedHistory.prototype.normalizeOrderBatch = function(item){
-    return item.source;
+    var orderbatch = item.source;
+    orderbatch.start = item.start.yyyymmddhhmmss();
+    orderbatch.end = item.end.yyyymmddhhmmss();
+    return orderbatch;
 }
 ModifiedHistory.prototype.addOrder = function(result , item){
     if(!result.orders){ result.orders = [];}
@@ -39,7 +42,10 @@ ModifiedHistory.prototype.addOrder = function(result , item){
     return result;
 }
 ModifiedHistory.prototype.normalizeOrder = function(item){
-    return item.source;
+    var order = item.source;
+    order.start = item.start.yyyymmddhhmmss();
+    order.end = item.end.yyyymmddhhmmss();
+    return order;
 }
 ModifiedHistory.prototype.addStop = function(result , item){
     if(!result.stops){ result.stops = [];}

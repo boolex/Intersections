@@ -6,14 +6,17 @@ var getOrders = function (content) {
 				site.departments.forEach(function (department, index, array) {
 					if(department.operatorstations){
 						department.operatorstations.forEach(function (operatorstation, index, array) {
-							if(operatorstation.orders){
-								operatorstation.orders.forEach(function (order, index, array) {
-									order.operatorstation = operatorstation;
-									order.department = department;
-									order.site = site;
-									orders.push(order);
-								});
-							}
+							operatorstation.prodplaces.forEach(function(prodplace){
+								if(operatorstation.orders){
+									operatorstation.orders.forEach(function (order, index, array) {
+										order.operatorstation = operatorstation;
+										order.department = department;
+										order.site = site;
+										order.prodplace = prodplace;
+										orders.push(order);
+									});
+								}
+							});							
 						});
 					}
 				});

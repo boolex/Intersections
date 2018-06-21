@@ -29,7 +29,7 @@ ProductionHistory.prototype.getOrderBatches = function () {
     return orderBatches;
 }
 ProductionHistory.prototype.getStops = function () {
-    return this.stops;
+   return (this.stops = this.stops || buildStops(this.content));    
 }
 ProductionHistory.prototype.getFilteredStops = function (predicate) {
     var stops = [];
