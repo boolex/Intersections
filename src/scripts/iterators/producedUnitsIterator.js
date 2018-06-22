@@ -15,35 +15,38 @@ var getProducedUnits = function (content) {
 				operatorstation.orders.forEach(function (order, index, array) {
 					if(order.producedUnits){
 						order.producedUnits.forEach(function (unit, index, array) {
-							unit.operatorstation = operatorstation;
-							unit.department = department;
-							unit.site = site;
-							unit.order = order;
-							unit.prodplace = prodplace;
-							unit.type='PUTimeEnd';
-							units.push(unit);
+							var item = copy(unit);
+							item.operatorstation = operatorstation;
+							item.department = department;
+							item.site = site;
+							item.order = order;
+							item.prodplace =  prodplace;
+							item.type='PUTimeEnd';
+							units.push(item);
 						});
 					}
 					if(order.scrappedUnits){
 						order.scrappedUnits.forEach(function (unit, index, array) {
-							unit.operatorstation = operatorstation;
-							unit.department = department;
-							unit.site = site;
-							unit.order = order;
-							unit.prodplace = prodplace;
-							unit.type='PUTimeScrapped';
-							units.push(unit);
+							var item = copy(unit);
+							item.operatorstation = operatorstation;
+							item.department = department;
+							item.site = site;
+							item.order = order;
+							item.prodplace = prodplace;
+							item.type='PUTimeScrapped';
+							units.push(item);
 						});
 					}
 					if(order.startedUnits){
 						order.startedUnits.forEach(function (unit, index, array) {
-							unit.operatorstation = operatorstation;
-							unit.department = department;
-							unit.site = site;
-							unit.order = order;
-							unit.prodplace = prodplace;
-							unit.type='PUTimeStart';
-							units.push(unit);
+							var item = copy(unit);
+							item.operatorstation = operatorstation;
+							item.department = department;
+							item.site = site;
+							item.order = order;
+							item.prodplace =  prodplace;
+							item.type='PUTimeStart';
+							units.push(item);
 						});
 					}
 				});

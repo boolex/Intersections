@@ -9,11 +9,12 @@ var getOrders = function (content) {
 							operatorstation.prodplaces.forEach(function(prodplace){
 								if(operatorstation.orders){
 									operatorstation.orders.forEach(function (order, index, array) {
-										order.operatorstation = operatorstation;
-										order.department = department;
-										order.site = site;
-										order.prodplace = prodplace;
-										orders.push(order);
+										var item = copy(order);
+										item.operatorstation = operatorstation;
+										item.department = department;
+										item.site = site;
+										item.prodplace =  prodplace;
+										orders.push(item);
 									});
 								}
 							});							

@@ -126,9 +126,6 @@ function loadApp(file) {
                     actions['selected_prodplace'] = true;
                     actions['history'] = true;
                     actions['draw_timeline'] = true;
-                   // window.checkedFactoryDivisions = [];
-                  //  actions['checked_prodplace'] = true;
-                   // options.checkedFactoryDivision = options.selectedFactoryDivision;
                 }
             }
             if(actions['selected_division']){                

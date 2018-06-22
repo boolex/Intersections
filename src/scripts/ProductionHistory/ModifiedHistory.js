@@ -24,6 +24,10 @@ ModifiedHistory.prototype.add = function(result, type, item){
     else if(type == 'shift'){
         return this.addShift(result, item);
     }
+    else if(type == 'range'){
+
+    }
+    throw 'Unknown type of event';
 }
 ModifiedHistory.prototype.addOrderBatch = function(result , item){
     if(!result.orderbatches){ result.orderbatches = [];}
@@ -32,8 +36,12 @@ ModifiedHistory.prototype.addOrderBatch = function(result , item){
 }
 ModifiedHistory.prototype.normalizeOrderBatch = function(item){
     var orderbatch = item.source;
-    orderbatch.start = item.start.yyyymmddhhmmss();
-    orderbatch.end = item.end.yyyymmddhhmmss();
+    if(typeof item.start != 'string'){
+        orderbatch.start = item.start.yyyymmddhhmmss();
+    }
+    if(typeof item.end != 'string'){
+        orderbatch.end = item.end.yyyymmddhhmmss();
+    }
     return orderbatch;
 }
 ModifiedHistory.prototype.addOrder = function(result , item){
@@ -43,8 +51,12 @@ ModifiedHistory.prototype.addOrder = function(result , item){
 }
 ModifiedHistory.prototype.normalizeOrder = function(item){
     var order = item.source;
-    order.start = item.start.yyyymmddhhmmss();
-    order.end = item.end.yyyymmddhhmmss();
+    if(typeof item.start != 'string'){
+        order.start = item.start.yyyymmddhhmmss();
+    }
+    if(typeof item.end != 'string'){
+        order.end = item.end.yyyymmddhhmmss();
+    }
     return order;
 }
 ModifiedHistory.prototype.addStop = function(result , item){
@@ -54,8 +66,12 @@ ModifiedHistory.prototype.addStop = function(result , item){
 }
 ModifiedHistory.prototype.normalizeStop = function(item){
     var stop = item.source;
-    stop.from = item.start.yyyymmddhhmmss();
-    stop.to = item.end.yyyymmddhhmmss();
+    if(typeof item.start != 'string'){
+        stop.from = item.start.yyyymmddhhmmss();
+    }
+    if(typeof item.end != 'string'){
+        stop.to = item.end.yyyymmddhhmmss();
+    }
     return stop;
 }
 ModifiedHistory.prototype.addShift = function(result , item){
@@ -65,7 +81,11 @@ ModifiedHistory.prototype.addShift = function(result , item){
 }
 ModifiedHistory.prototype.normalizeShift = function(item){
     var shift = item.source;
-    shift.start = item.start.yyyymmddhhmmss();
-    shift.end = item.end.yyyymmddhhmmss();
+    if(typeof item.start != 'string'){
+        shift.start = item.start.yyyymmddhhmmss();
+    }
+    if(typeof item.end != 'string'){
+        shift.end = item.end.yyyymmddhhmmss();
+    }
     return shift;
 }

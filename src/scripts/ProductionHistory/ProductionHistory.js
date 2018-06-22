@@ -85,10 +85,7 @@ function buildOrders(content) {
             title: "<b>Order_Id:</b> " + order.id + "<br/><b>Start:</b> " + order.start + "<br/><b>End:</b> " + order.end + "<br/><b>Duration: </b>" + (Date.parse(order.end) - Date.parse(order.start)) / 1000 + " <b>s</b>",
             start: order.start,
             end: order.end == null ? content.now : order.end,
-            group: "S" + order.site.id
-            + "D" + order.department.id
-            + "O" + order.operatorstation.id
-            + "Orders",
+            group: 'orders',//"S" + order.site.id + "D" + order.department.id + "O" + order.operatorstation.id + "Orders",
             tags: {
                 orderNumber: 'test',
                 articleNumber: order.articleNumber,
@@ -110,10 +107,7 @@ function buildOrderBatches(content) {
             content: "orderbatch",
             start: orderBatch.start,
             end: orderBatch.end == null ? content.now : orderBatch.end,
-            group: "S" + orderBatch.site.id
-            + "D" + orderBatch.department.id
-            + "O" + orderBatch.operatorstation.id
-            + "OrderBatches",
+            group: 'orderbatches',// "S" + orderBatch.site.id + "D" + orderBatch.department.id + "O" + orderBatch.operatorstation.id + "OrderBatches",
             tags: {
                 orderId: orderBatch.order.id,
                 orderNumber: 'test',
@@ -156,11 +150,7 @@ function buildStops(content) {
             source : stop,
             start: stop.from,
             end: stop.to,
-            group: "S" + stop.site.id
-            + "D" + stop.department.id
-            + "O" + stop.operatorstation.id
-            + "P" + stop.prodplace.id
-            + "Stops",
+            group: 'stops',//"S" + stop.site.id + "D" + stop.department.id + "O" + stop.operatorstation.id + "P" + stop.prodplace.id + "Stops",
             tags: tags,
             className: 'stop',
             duration: (Date.parse(stop.to) - Date.parse(stop.from)) / 1000
@@ -177,10 +167,7 @@ function buildShifts(content) {
             content: ((shift.changeType > 0) ? ("Team_" + shift.changeType) : "Not plan prod"),
             start: shift.start,
             end: shift.end,
-            group: "S" + shift.site.id
-            + "D" + shift.department.id
-            + "O" + shift.operatorstation.id
-            + "Shifts",
+            group: 'shifts',//"S" + shift.site.id + "D" + shift.department.id + "O" + shift.operatorstation.id + "Shifts",
             tags: {
                 name: getTeamName(content, shift.changeType)
             },

@@ -26,8 +26,9 @@ Timeline.prototype.visualize=function(container){
     return this;
 }
 Timeline.prototype.registerSystemEvents = function(timeline, logger){
+    
     timeline.itemsData.on('*', function (event, properties) {
-        logger.system("event : " + JSON.stringify(event) + "; Properties : " + JSON.stringify(properties));
+        logger.system("event : " + toString(event) + "; Properties : " + toString(properties));
       });     
 }
 Timeline.prototype.timeLineOptions = function(timeline){

@@ -10,7 +10,7 @@ var getStops = function (content) {
 							operatorstation.prodplaces.forEach(function (prodplace, index, array) {
 								if (prodplace.stops != null) {
 									prodplace.stops.forEach(function (stop, index, array) {
-										stop.prodplace = prodplace;
+										stop.prodplace =  {id: prodplace.id};
 										stop.operatorstation = operatorstation;
 										stop.department = department;
 										stop.site = site;

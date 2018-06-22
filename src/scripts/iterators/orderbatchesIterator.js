@@ -11,12 +11,13 @@ var getOrderBatches = function (content) {
 									operatorstation.prodplaces.forEach(function(prodplace){
 										if(order.batches){
 											order.batches.forEach(function (orderBatch, index, array) {
-												orderBatch.operatorstation = operatorstation;
-												orderBatch.department = department;
-												orderBatch.site = site;
-												orderBatch.order = order;
-												orderBatch.prodplace = prodplace;
-												orderBatches.push(orderBatch);
+												var item = copy(orderBatch);
+												item.operatorstation = operatorstation;
+												item.department = department;
+												item.site = site;
+												item.order = order;
+												item.prodplace = prodplace;
+												orderBatches.push(item);
 											});
 										}
 									});									
