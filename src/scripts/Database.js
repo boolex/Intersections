@@ -61,6 +61,9 @@ Database.prototype.item=function(type,id){
     }
     throw 'Item "' + type + ' ' + id + '" not found';
 }
+Database.prototype.prodplace = function(id){
+    return this.item('prodplace', id);
+}
 Database.properties=function(type){
     if(type=='factory'){
         return [];

@@ -37,8 +37,15 @@ Timeline.prototype.timeLineOptions = function(timeline, onReady){
         editable: true,
         onUpdate: function(item, callback){ timeline.itemUpdated(item, callback, timeline.logger); },
         onMove: function(item, callback){ timeline.itemMoved(item, callback, timeline.logger); },
-        onInitialDrawComplete: onReady      
+        onInitialDrawComplete: onReady,
+        onAdd : function(item, callback){
+            timeline.itemAdded(item, callback, timeline.logger);
+        }
     };
+}
+Timeline.prototype.itemAdded = function(item, callback, logger){
+    logger.log('item added');
+    callback(item);
 }
 Timeline.prototype.itemUpdated = function(item, callback, logger){
     logger.log('item updated');

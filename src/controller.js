@@ -99,7 +99,13 @@ function loadApp(file) {
                         }
                         var prodplace = window.selectedProdplace;
 
-                        app.config.database().set(prodplace.id, new ModifiedHistory(window.timeline.timeLine.itemsData));
+                        app.config.database().set(
+                            prodplace.id, 
+                            new ModifiedHistory(
+                                app.config.database().prodplace(window.selectedProdplace.id),
+                                window.timeline.timeLine.itemsData                               
+                            )
+                        );
 
                         app.setContext('content', app.config.database().content);
                         window.logger.log('saved');
@@ -221,8 +227,8 @@ function loadApp(file) {
                         window.timeline =
                             new Timeline(
                                 app.history,
-                                null,
-                                app.getContextOption('content').now,
+                                /*groups*/null,
+                                app.getContextOption('content').now,                                
                                 window.logger
                             ).draw(document.getElementById('visualization'),
                         function(){

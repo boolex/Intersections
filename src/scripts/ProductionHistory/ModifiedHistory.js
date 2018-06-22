@@ -1,4 +1,5 @@
-var ModifiedHistory = function(dataset){
+var ModifiedHistory = function(prodplace, dataset){
+    this.prodplace=prodplace;
     this.dataset = dataset;
 }
 
@@ -24,11 +25,19 @@ ModifiedHistory.prototype.add = function(result, type, item){
     else if(type == 'shift'){
         return this.addShift(result, item);
     }
-    else if(item.type == 'range'){
+    else if(item.type == 'range'){       
         var newItem = JSON.parse(JSON.stringify(item));
         newItem.type = ({'orderbatches':'orderbatch', 'orders':'order', 'shifts':'shift', 'stops':'stop'})[item.group];
         newItem.start = item.start.yyyymmddhhmmss();
         newItem.end = item.end.yyyymmddhhmmss();
+       // newItem.className = 'shift';
+        newItem.source = {
+            changeType : 1,
+            start : item.start.yyyymmddhhmmss(),
+            end : item.end.yyyymmddhhmmss(),
+            prodplace:this.prodplace,
+            operatorstation :this.prodplace.operatorstartion 
+        };
         return this.add(result, newItem.type, newItem);
     }
     throw 'Unknown type of event';
