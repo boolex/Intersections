@@ -105,8 +105,9 @@
 		</tr>
 		<tr>
 			
-			<td colspan="3">
-				<div id="visualization"></div>
+			<td colspan="3" style="position: relative;">
+					<img id="loadingImage" src="media/loading.gif" class="loading hidden" />
+				<div id="visualization"></div>				
 			</td>
 		</tr>
 		<tr>
@@ -148,6 +149,16 @@
 </body>
 
 </html>
+<style type="text/css">
+	.loading{
+		width:100px;
+		position: relative;
+		top:0px;
+	}
+	.hidden{
+		display: none;
+	}
+</style>
 <script type="text/javascript">
 	window.onload = function () {
 		loadApp(config.file);

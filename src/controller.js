@@ -216,13 +216,19 @@ function loadApp(file) {
                try{
                    if(window.selectedProdplace){
                         window.logger.debug('action: [draw_timeline].');
+                        document.getElementById('loadingImage').classList.remove('hidden');
+                        //document.getElementById('visualization').classList.add('hidden');
                         window.timeline =
                             new Timeline(
                                 app.history,
                                 null,
                                 app.getContextOption('content').now,
                                 window.logger
-                            ).draw(document.getElementById('visualization'));
+                            ).draw(document.getElementById('visualization'),
+                        function(){
+                            document.getElementById('loadingImage').classList.add('hidden');
+                            //document.getElementById('visualization').classList.remove('hidden');
+                        });
                     }
                }
                catch(e){

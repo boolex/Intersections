@@ -4,18 +4,18 @@ var Timeline = function (history, groups, now, logger) {
     this.now = now;
     this.logger = logger;
 }
-Timeline.prototype.draw = function (container) {
-   this.visualize(container);
+Timeline.prototype.draw = function (container, onReady) {
+   this.visualize(container, onReady);
    this.registerEventHandlers();
    this.registerSystemEvents(this.timeLine, this.logger);
    return this;
 }
-Timeline.prototype.visualize=function(container){
+Timeline.prototype.visualize=function(container, onReady){
     container.innerHTML = "";
     this.timeLine = new vis.Timeline(
         container,
         new vis.DataSet(this.history.get()),
-		this.timeLineOptions(this)
+        this.timeLineOptions(this, onReady)        
     );
     if (this.now != null) {
         this.timeLine.addCustomTime(this.now, "now");
@@ -31,12 +31,13 @@ Timeline.prototype.registerSystemEvents = function(timeline, logger){
         logger.system("event : " + toString(event) + "; Properties : " + toString(properties));
       });     
 }
-Timeline.prototype.timeLineOptions = function(timeline){
+Timeline.prototype.timeLineOptions = function(timeline, onReady){
     return {
         showTooltips: true,
         editable: true,
         onUpdate: function(item, callback){ timeline.itemUpdated(item, callback, timeline.logger); },
-        onMove: function(item, callback){ timeline.itemMoved(item, callback, timeline.logger); }      
+        onMove: function(item, callback){ timeline.itemMoved(item, callback, timeline.logger); },
+        onInitialDrawComplete: onReady      
     };
 }
 Timeline.prototype.itemUpdated = function(item, callback, logger){
