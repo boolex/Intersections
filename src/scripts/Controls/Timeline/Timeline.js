@@ -12,17 +12,29 @@ Timeline.prototype.draw = function (container, onReady) {
 }
 Timeline.prototype.visualize=function(container, onReady){
     container.innerHTML = "";
+    var items = this.history.get();
+    var emptyTimeline = items.length == 0;
     this.timeLine = new vis.Timeline(
         container,
         new vis.DataSet(this.history.get()),
-        this.timeLineOptions(this, onReady)        
+        this.timeLineOptions(this, onReady, emptyTimeline)        
     );
     if (this.now != null) {
         this.timeLine.addCustomTime(this.now, "now");
     }
 
-    this.timeLine.setGroups(new Filter(this.history).get());   
-
+    if(items.length == 0){
+        var groups = new vis.DataSet();    
+        groups.add({id:'order',content:'orders'});
+        groups.add({id:'orderbatch',content:'orderbatches'});
+        groups.add({id:'shift',content:'shifts'})
+        groups.add({id:'stop',content:'stops'})
+        this.timeLine.setGroups(groups);   
+    }
+    else{
+        this.timeLine.setGroups(new Filter(this.history).get());   
+    }
+ 
     return this;
 }
 Timeline.prototype.registerSystemEvents = function(timeline, logger){
@@ -31,8 +43,8 @@ Timeline.prototype.registerSystemEvents = function(timeline, logger){
         logger.system("event : " + toString(event) + "; Properties : " + toString(properties));
       });     
 }
-Timeline.prototype.timeLineOptions = function(timeline, onReady){
-    return {
+Timeline.prototype.timeLineOptions = function(timeline, onReady,emptyTimeline){
+    var options = {
         showTooltips: true,
         editable: true,
         onUpdate: function(item, callback){ timeline.itemUpdated(item, callback, timeline.logger); },
@@ -42,6 +54,11 @@ Timeline.prototype.timeLineOptions = function(timeline, onReady){
             timeline.itemAdded(item, callback, timeline.logger);
         }
     };
+    if(emptyTimeline){
+        options['start'] = new Date('2017-05-23');
+        options['end'] = new Date('2017-05-24');
+    }
+    return options;
 }
 Timeline.prototype.itemAdded = function(item, callback, logger){
     logger.log('item added');
@@ -90,6 +107,31 @@ Timeline.prototype.getGroups = function (items) {
     });
 
     return groups;
+}
+
+Timeline.prototype.template = function(){
+    return [
+        {
+            className : 'order',
+            content : 'order',
+            group : 'orders'
+        },
+        {
+            className : 'orderbatch',
+            content : 'orderbatch',
+            group : 'orderbatches'
+        },
+        {
+            className : 'shift',
+            content : 'shift',
+            group : 'shifts'
+        },
+        {
+            className : 'stop',
+            content : 'stop',
+            group : 'stops'
+        }
+    ];
 }
 Timeline.dependencies = [];
 Timeline.dependencies.push("vis.TimeLine");

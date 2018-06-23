@@ -45,6 +45,33 @@ function loadApp(file) {
         },
         database : function(){
             return window._db || (window._db = new Database(this.app.getContextOption('content')));
+        },        
+        registerScenarios : function(){
+            var drawSelectedProdplaceScenario = new WhenProdplaceSelectedThenTimelineDrawnScenario(                                
+                /*factoryStructure*/$('#system-structure')
+            ).register(
+                /*app*/this.app.config,
+                /*logger*/window.logger
+            );
+            var savePressedTimelineStateFetched = new WhenSavePressedTimelineStateFetched(
+
+            ).register(
+                 /*app*/this.app.config,
+                /*logger*/window.logger
+            );
+        },
+        getNow: function(){
+            return this.app.getContextOption('content').now;
+        },
+        getHistoryOnProdplace: function(id){
+            if(window.selectedProdplace){
+                return new FilteredProducitonHistoryWithinPeriodWithIntersectionsOnProdplace(
+                        this.app.getContextOption('content'),
+                        this.app.getContextOption('range'),
+                        this.app.getContextOption('selectedGroups') || (window.page.getParameter('groups') || '').split(';'),
+                        id
+                    );
+            }
         },
         update: function (options) {
             var actions = {};
@@ -92,29 +119,29 @@ function loadApp(file) {
                 actions['factory_structure'] = true;
                 actions['update_header'] = true;      
                 
-                document.getElementById('save').onclick = function(){
-                    try{
-                        if(!window.selectedProdplace){
-                            return;
-                        }
-                        var prodplace = window.selectedProdplace;
+                // document.getElementById('save').onclick = function(){
+                //     try{
+                //         if(!window.selectedProdplace){
+                //             return;
+                //         }
+                //         var prodplace = window.selectedProdplace;
 
-                        app.config.database().set(
-                            prodplace.id, 
-                            new ModifiedHistory(
-                                app.config.database().prodplace(window.selectedProdplace.id),
-                                window.timeline.timeLine.itemsData                               
-                            )
-                        );
+                //         app.config.database().set(
+                //             prodplace.id, 
+                //             new ModifiedHistory(
+                //                 app.config.database().prodplace(window.selectedProdplace.id),
+                //                 window.timeline.timeLine.itemsData                               
+                //             )
+                //         );
 
-                        app.setContext('content', app.config.database().content);
-                        window.logger.log('saved');
-                    }
-                    catch(e){
-                        window.logger.error(e);
-                    }
+                //         app.setContext('content', app.config.database().content);
+                //         window.logger.log('saved');
+                //     }
+                //     catch(e){
+                //         window.logger.error(e);
+                //     }
 
-                }
+                // }
             }
             if(options != null && options.checkedFactoryDivision != null){
                 if(options.checkedFactoryDivision.type == 'prodplace'){
@@ -219,28 +246,29 @@ function loadApp(file) {
                 );
             }
             if (actions['draw_timeline']) {
-               try{
-                   if(window.selectedProdplace){
-                        window.logger.debug('action: [draw_timeline].');
-                        document.getElementById('loadingImage').classList.remove('hidden');
-                        //document.getElementById('visualization').classList.add('hidden');
-                        window.timeline =
-                            new Timeline(
-                                app.history,
-                                /*groups*/null,
-                                app.getContextOption('content').now,                                
-                                window.logger
-                            ).draw(document.getElementById('visualization'),
-                        function(){
-                            document.getElementById('loadingImage').classList.add('hidden');
-                            //document.getElementById('visualization').classList.remove('hidden');
-                        });
-                    }
-               }
-               catch(e){
-                   window.logger.error(e);
-                   if(!window.hideErrors){throw e;}
-               }
+                
+            //    try{
+            //        if(window.selectedProdplace){
+            //             window.logger.debug('action: [draw_timeline].');
+            //             document.getElementById('loadingImage').classList.remove('hidden');
+            //             window.timeline =
+            //                 new Timeline(
+            //                     app.history,
+            //                     /*groups*/null,
+            //                     app.getContextOption('content').now,                                
+            //                     window.logger
+            //                 ).draw(document.getElementById('visualization'),
+            //             function(){
+            //                 document.getElementById('loadingImage').classList.add('hidden');
+            //                 //document.getElementById('visualization').classList.remove('hidden');
+            //             });
+            //         }
+            //    }
+            //    catch(e){
+            //        window.logger.error(e);
+            //        if(!window.hideErrors){throw e;}
+            //    }
+               
             }
             if (actions['draw_filter_tree'] && false) {
                 document.getElementById("groups").innerHTML = "";

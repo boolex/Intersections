@@ -30,14 +30,25 @@ ModifiedHistory.prototype.add = function(result, type, item){
         newItem.type = ({'orderbatches':'orderbatch', 'orders':'order', 'shifts':'shift', 'stops':'stop'})[item.group];
         newItem.start = item.start.yyyymmddhhmmss();
         newItem.end = item.end.yyyymmddhhmmss();
+        if(newItem.type == 'shift'){
        // newItem.className = 'shift';
-        newItem.source = {
-            changeType : 1,
-            start : item.start.yyyymmddhhmmss(),
-            end : item.end.yyyymmddhhmmss(),
-            prodplace:this.prodplace,
-            operatorstation :this.prodplace.operatorstartion 
-        };
+            newItem.source = {
+                changeType : 1,
+                start : item.start.yyyymmddhhmmss(),
+                end : item.end.yyyymmddhhmmss(),
+                prodplace:this.prodplace,
+                operatorstation :this.prodplace.operatorstartion 
+            }
+        }
+        else{
+            newItem.source = {
+                from : item.start.yyyymmddhhmmss(),
+                to : item.end.yyyymmddhhmmss(),
+                prodplace:this.prodplace,
+                operatorstation :this.prodplace.operatorstartion,
+                type: 2
+            }
+        }
         return this.add(result, newItem.type, newItem);
     }
     throw 'Unknown type of event';

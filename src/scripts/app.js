@@ -22,6 +22,9 @@ App.prototype.RegisterEvents = function () {
     if (this.config.display != null) {
         this.config.display(this);
     }
+    if (this.config.registerScenarios != null) {
+        this.config.registerScenarios();
+    }
 }
 App.prototype.log = function (message) {
     document.getElementById("log").innerHTML += message;

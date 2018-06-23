@@ -230,6 +230,12 @@ Database.prototype.getId = function(type){
             this.prodplaces().map(function(x){return x.id})
         );   
     }
+    else if(type == 'stop'){
+        return 1 + Math.max.apply(
+            null,
+            this.stops().map(function(x){return x.id ? x.id : 0})
+        );   
+    }
 }
 Database.prototype.sites = function(){
     return this.content.sites;
@@ -253,6 +259,12 @@ Database.prototype.prodplaces = function(){
         })
         .reduce(function(a, b){ return a.concat(b); }, []);
 }
+Database.prototype.stops = function(){
+    return this.prodplaces()
+    .map(function(prodplace){
+        return prodplace.stops ? prodplace.stops.map(function(stop){var x = stop; x.prodplace = prodplace; return x;}):[]
+    }).reduce(function(a, b){ return a.concat(b); }, []);
+}
 Database.prototype.set = function(prodplaceId, data){
     data = data.JSON();
     var prodplace = this.item('prodplace', prodplaceId);
@@ -265,6 +277,16 @@ Database.prototype.set = function(prodplaceId, data){
     }
 
     prodplace.stops = data.stops;
+    var stopId = this.getId('stop');
+    
+    prodplace.stops.forEach(function(stop){
+        if(!stop.id){
+            stop.id = ++stopId;
+        }
+    });
+    data.shifts = data.shifts.sort(function(a, b){
+        return new Date(Date.parse(a.start)) > new Date(Date.parse(b.start));
+    });
     var noProdPeriods = [];
     for(var i = 0; i < data.shifts.length; i++){
         if(i > 0 && data.shifts[i].start > data.shifts[i-1].end){
