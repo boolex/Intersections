@@ -31,7 +31,6 @@ ModifiedHistory.prototype.add = function(result, type, item){
         newItem.start = item.start.yyyymmddhhmmss();
         newItem.end = item.end.yyyymmddhhmmss();
         if(newItem.type == 'shift'){
-       // newItem.className = 'shift';
             newItem.source = {
                 changeType : 1,
                 start : item.start.yyyymmddhhmmss(),

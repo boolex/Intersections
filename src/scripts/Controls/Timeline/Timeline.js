@@ -23,6 +23,7 @@ Timeline.prototype.visualize=function(container, onReady){
         this.timeLine.addCustomTime(this.now, "now");
     }
 
+    /*
     if(items.length == 0){
         var groups = new vis.DataSet();    
         groups.add({id:'orders',content:'orders'});
@@ -33,7 +34,13 @@ Timeline.prototype.visualize=function(container, onReady){
     }
     else{
         this.timeLine.setGroups(new Filter(this.history).get());   
-    }
+    }*/
+    var groups = new vis.DataSet();    
+    groups.add({id:'orders',content:'orders'});
+    groups.add({id:'orderbatches',content:'orderbatches'});
+    groups.add({id:'shifts',content:'shifts'})
+    groups.add({id:'stops',content:'stops'})
+    this.timeLine.setGroups(groups);   
  
     return this;
 }
