@@ -12,7 +12,7 @@ Timeline.prototype.draw = function (container, onReady) {
 }
 Timeline.prototype.visualize=function(container, onReady){
     container.innerHTML = "";
-    var items = this.history.get();
+    var items = this.history.Items();
     var emptyTimeline = items.length == 0;
     this.timeLine = new vis.Timeline(
         container,
