@@ -4,7 +4,7 @@ var Filter = function (history) {
 
 Filter.prototype.get = function () {
     var itemGroups = [];
-    this.history.forEach(function (item) {
+    this.history.Items().forEach(function (item) {
         if (itemGroups.indexOf(item.group) == -1) {
             itemGroups.push(item.group);
         }
@@ -17,7 +17,7 @@ Filter.prototype.get = function () {
         var groupDef = { id: group, content: group, subgroupStack: true };
         groups.push(groupDef);
         groupDef.children = {};
-        self.history.forEach(function (item) {
+        self.history.Items().forEach(function (item) {
             if (item.group == group && item.tags != null) {
                 
                 for (var tag in item.tags) {

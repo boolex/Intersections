@@ -269,14 +269,14 @@ Database.prototype.set = function(prodplaceId, data){
     data = data.JSON();
     var prodplace = this.item('prodplace', prodplaceId);
 
-    var orderbatches = data.orderbatches.map(function(ob){ob.orderId = ob.order.id;return ob;}).groupBy('orderId');
+    var orderbatches = (data.orderbatches || []).map(function(ob){ob.orderId = ob.order.id;return ob;}).groupBy('orderId');
     for (var orderId in orderbatches) {
         if (orderbatches.hasOwnProperty(orderId)) {
            data.orders.find(function(x){return x.id == parseInt(orderId)}).batches = orderbatches[orderId];
         }
     }
 
-    prodplace.stops = data.stops;
+    prodplace.stops = (data.stops || []);
     var stopId = this.getId('stop');
     
     prodplace.stops.forEach(function(stop){
@@ -300,13 +300,13 @@ Database.prototype.set = function(prodplaceId, data){
         changeType: -1,
         changeDate : data.shifts.reduce(function(min, current){
             return min < new Date(Date.parse(current.start))? min : new Date(Date.parse(data.shifts[0].start))
-        }).yyyymmddhhmmss()
+        }, new Date(1000000*10000000)).yyyymmddhhmmss()
     });
     
     prodplace.operatorstartion.shifts = prodplace.operatorstartion.shifts.sort(function(a, b){
         return new Date(Date.parse(a.changeDate)) > new Date(Date.parse(b.changeDate));
     });
-    prodplace.operatorstartion.orders = data.orders;
+    prodplace.operatorstartion.orders = data.orders || [];
 }
 function calendarHistory(shift){
     return {
