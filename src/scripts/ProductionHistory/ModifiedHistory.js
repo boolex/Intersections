@@ -40,13 +40,29 @@ ModifiedHistory.prototype.add = function(result, type, item){
                 operatorstation :this.prodplace.operatorstartion 
             }
         }
-        else{
+        else if(newItem.type == 'stop'){
             newItem.source = {
                 from : item.start.yyyymmddhhmmss(),
                 to : item.end.yyyymmddhhmmss(),
                 prodplace:this.prodplace,
                 operatorstation :this.prodplace.operatorstartion,
                 type: 2
+            }
+        }
+        else if(newItem.type == 'order'){
+            newItem.source = {
+                start : item.start.yyyymmddhhmmss(),
+                end : item.end.yyyymmddhhmmss(),
+                prodplace:this.prodplace,
+                operatorstation :this.prodplace.operatorstartion
+            }
+        }
+        else if(newItem.type == 'orderbatch'){
+            newItem.source = {
+                start : item.start.yyyymmddhhmmss(),
+                end : item.end.yyyymmddhhmmss(),
+                prodplace:this.prodplace,
+                operatorstation :this.prodplace.operatorstartion
             }
         }
         return this.add(result, newItem.type, newItem);

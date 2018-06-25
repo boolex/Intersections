@@ -269,7 +269,7 @@ Database.prototype.set = function(prodplaceId, data){
     data = data.JSON();
     var prodplace = this.item('prodplace', prodplaceId);
 
-    var orderbatches = data.orderbatches.map(function(ob){ob.orderId = ob.order.id;return ob;}).groupBy('orderId');
+    var orderbatches = (data.orderbatches || []).map(function(ob){ob.orderId = ob.order.id;return ob;}).groupBy('orderId');
     for (var orderId in orderbatches) {
         if (orderbatches.hasOwnProperty(orderId)) {
            data.orders.find(function(x){return x.id == parseInt(orderId)}).batches = orderbatches[orderId];
@@ -279,12 +279,12 @@ Database.prototype.set = function(prodplaceId, data){
     prodplace.stops = data.stops;
     var stopId = this.getId('stop');
     
-    prodplace.stops.forEach(function(stop){
+    (prodplace.stops || []).forEach(function(stop){
         if(!stop.id){
             stop.id = ++stopId;
         }
     });
-    data.shifts = data.shifts.sort(function(a, b){
+    data.shifts = (data.shifts || []).sort(function(a, b){
         return new Date(Date.parse(a.start)) > new Date(Date.parse(b.start));
     });
     var noProdPeriods = [];

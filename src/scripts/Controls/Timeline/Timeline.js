@@ -16,7 +16,7 @@ Timeline.prototype.visualize=function(container, onReady){
     var emptyTimeline = items.length == 0;
     this.timeLine = new vis.Timeline(
         container,
-        new vis.DataSet(this.history.get()),
+        new vis.DataSet(this.history.Items()),
         this.timeLineOptions(this, onReady, emptyTimeline)        
     );
     if (this.now != null) {
@@ -25,10 +25,10 @@ Timeline.prototype.visualize=function(container, onReady){
 
     if(items.length == 0){
         var groups = new vis.DataSet();    
-        groups.add({id:'order',content:'orders'});
-        groups.add({id:'orderbatch',content:'orderbatches'});
-        groups.add({id:'shift',content:'shifts'})
-        groups.add({id:'stop',content:'stops'})
+        groups.add({id:'orders',content:'orders'});
+        groups.add({id:'orderbatches',content:'orderbatches'});
+        groups.add({id:'shifts',content:'shifts'})
+        groups.add({id:'stops',content:'stops'})
         this.timeLine.setGroups(groups);   
     }
     else{
