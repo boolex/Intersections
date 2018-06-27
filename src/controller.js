@@ -59,6 +59,12 @@ function loadApp(file) {
                  /*app*/this.app.config,
                 /*logger*/window.logger
             );
+            var whenTimelineEventSelectedEditFormShown = new WhenTimelineEventSelectedEditFormShown(
+
+            ).register(
+                 /*app*/this.app.config,
+                /*logger*/window.logger
+            );
         },
         getNow: function(){
             return this.app.getContextOption('content').now;
@@ -166,7 +172,7 @@ function loadApp(file) {
                     window.logger.debug('selected_division');
 
                     window.selectedFactoryItem = options.selectedFactoryDivision;
-                    showFactoryDivisionProperties(options.selectedItem.type, options.selectedFactoryDivision, app.config.database(), app);   
+                    //showFactoryDivisionPropertiesshowFactoryDivisionProperties(options.selectedItem.type, options.selectedFactoryDivision, app.config.database(), app);   
                 }
                 catch(e){
                     window.logger.error(e);
@@ -324,6 +330,10 @@ function loadApp(file) {
                 $("#system-structure").bind(
                      "select_node.jstree", function(evt, data){                       
                         (function(item){
+                            item = copy(item);
+                            item.className = item.type;
+                            
+                            window.dispatchEvent(new CustomEvent('eventSelected', { 'detail': item })); 
                             app.update({
                                 selectedFactoryDivision : app.config.database().item(item.type, item.id), 
                                 selectedItem : item

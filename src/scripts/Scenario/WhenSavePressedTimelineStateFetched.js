@@ -24,7 +24,6 @@ WhenSavePressedTimelineStateFetched.prototype.FetchTimelineState = function(scen
             return;
         }
         var prodplace = window.selectedProdplace;
-
         app.database().set(
             prodplace.id, 
             new ModifiedHistory(
@@ -32,7 +31,6 @@ WhenSavePressedTimelineStateFetched.prototype.FetchTimelineState = function(scen
                 window.timeline.timeLine.itemsData                               
             )
         );
-
         app.app.setContext('content', app.database().content);
         logger.log('saved');
     }

@@ -83,9 +83,13 @@
 
 	<script type="text/javascript" src="scripts/Scenario/WhenProdplaceSelectedThenTimelineDrawnScenario.js"></script>
 	<script type="text/javascript" src="scripts/Scenario/WhenSavePressedTimelineStateFetched.js"></script>
-	<script type="text/javascript" src="scripts/WhenTimelineEventSelectedEditFormShown.js"></script>
+	<script type="text/javascript" src="scripts/Scenario/WhenTimelineEventSelectedEditFormShown.js"></script>
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/ObjectEditForm.js"></script>
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/BaseForm.js"></script>	
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/ShiftForm.js"></script>	
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/ProdplaceForm.js"></script>	
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/OperatorStationForm.js"></script>	
 </head>
-
 <body>
 	<div id="log"></div>
 	<div id="header">
@@ -106,10 +110,12 @@
 				<table id="factoryDivisionProperties">
 					<tbody></tbody>
 				</table>
+				<table id="editForm">
+					<tbody></tbody>
+				</table>
 			</td>
 		</tr>
-		<tr>
-			
+		<tr>			
 			<td colspan="3" style="position: relative;">
 					<img id="loadingImage" src="media/loading.gif" class="loading hidden" />
 				<div id="visualization"></div>				

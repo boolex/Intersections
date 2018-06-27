@@ -44,11 +44,10 @@ Timeline.prototype.visualize=function(container, onReady){
  
     return this;
 }
-Timeline.prototype.registerSystemEvents = function(timeline, logger){
-    
+Timeline.prototype.registerSystemEvents = function(timeline, logger){    
     timeline.itemsData.on('*', function (event, properties) {
         logger.system("event : " + toString(event) + "; Properties : " + toString(properties));
-      });     
+    });     
 }
 Timeline.prototype.timeLineOptions = function(timeline, onReady,emptyTimeline){
     var options = {
@@ -84,6 +83,13 @@ Timeline.prototype.registerEventHandlers = function(){
       (function(timeline){
         timeline.timeLine.on('doubleClick', function (properties) {
             timeline.logger.log('doubleClick');
+        });
+      })(this);
+      (function(timeline){
+        timeline.timeLine.on('click', function (properties) {
+            timeline.logger.log('click');
+            var item = window.timeline.timeLine.itemsData._data[properties.item];
+            window.dispatchEvent(new CustomEvent('eventSelected', { 'detail': item }));            
         });
       })(this);
 }

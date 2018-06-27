@@ -237,6 +237,11 @@ Database.prototype.getId = function(type){
         );   
     }
 }
+Database.prototype.teams = function(){
+    return this.content.teams.map(function(team){
+        return {key : team.name, value : team.number};
+    });
+}
 Database.prototype.sites = function(){
     return this.content.sites;
 }
@@ -274,7 +279,10 @@ Database.prototype.set = function(prodplaceId, data){
         order.id = ++orderId;
     });
 
-    var anyOrderId = prodplace.operatorstartion.orders [0].id;
+    var anyOrderId;
+    if(prodplace.operatorstartion.orders && prodplace.operatorstartion.orders.length > 0){
+        anyOrderId = prodplace.operatorstartion.orders [0].id;
+    }
     
     (data.orderbatches || []).filter(function(x){return x.order == null || x.order.id == null}).forEach(function(orderbatch){
         orderbatch.order = {id :  anyOrderId}
@@ -289,10 +297,14 @@ Database.prototype.set = function(prodplaceId, data){
         function(ob){ob.orderId = ob.order.id;
             return ob;}).groupBy('orderId');
  
+    var orderbatches = (data.orderbatches || []).map(function(ob){ob.orderId = ob.order.id;return ob;}).groupBy('orderId');
 
     for (var orderId in orderbatches) {
         if (orderbatches.hasOwnProperty(orderId)) {
-            prodplace.operatorstartion.orders.find(function(x){return x.id == parseInt(orderId)}).batches = orderbatches[orderId];
+            var order =  prodplace.operatorstartion.orders.find(function(x){return x.id == parseInt(orderId)});
+            if(order){
+                order.batches = orderbatches[orderId];
+            }
         }
     }   
 
@@ -326,6 +338,7 @@ Database.prototype.set = function(prodplaceId, data){
     prodplace.operatorstartion.shifts = prodplace.operatorstartion.shifts.sort(function(a, b){
         return new Date(Date.parse(a.changeDate)) > new Date(Date.parse(b.changeDate));
     }); 
+    prodplace.operatorstartion.orders = data.orders || [];
 }
 function calendarHistory(shift){
     return {
