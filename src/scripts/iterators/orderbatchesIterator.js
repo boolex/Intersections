@@ -8,19 +8,21 @@ var getOrderBatches = function (content) {
 						department.operatorstations.forEach(function (operatorstation, index, array) {
 							if(operatorstation.orders){
 								operatorstation.orders.forEach(function (order, index, array) {
-									operatorstation.prodplaces.forEach(function(prodplace){
-										if(order.batches){
-											order.batches.forEach(function (orderBatch, index, array) {
-												var item = copy(orderBatch);
-												item.operatorstation = operatorstation;
-												item.department = department;
-												item.site = site;
-												item.order = order;
-												item.prodplace = prodplace;
-												orderBatches.push(item);
-											});
-										}
-									});									
+									if(operatorstation.prodplaces){
+										operatorstation.prodplaces.forEach(function(prodplace){
+											if(order.batches){
+												order.batches.forEach(function (orderBatch, index, array) {
+													var item = copy(orderBatch);
+													item.operatorstation = operatorstation;
+													item.department = department;
+													item.site = site;
+													item.order = order;
+													item.prodplace = prodplace;
+													orderBatches.push(item);
+												});
+											}
+										});								
+									}	
 								});
 							}
 						});

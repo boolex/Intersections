@@ -46,6 +46,11 @@ function loadApp(file) {
         database : function(){
             return window._db || (window._db = new Database(this.app.getContextOption('content')));
         },        
+        registerEventHandlers : function(){
+            (function(app){
+                window.addEventListener("contentmodified", function(){app.update({contentModified:true});}, false);
+            })(this);            
+        },
         registerScenarios : function(){
             var drawSelectedProdplaceScenario = new WhenProdplaceSelectedThenTimelineDrawnScenario(                                
                 /*factoryStructure*/$('#system-structure')
@@ -65,19 +70,37 @@ function loadApp(file) {
                  /*app*/this.app.config,
                 /*logger*/window.logger
             );
+            var whenUserCreatedNewEventItsInitializedScenario = new WhenUserCreatedNewEventItsInitializedScenario(
+
+            ).register(
+                /*app*/this.app.config,
+               /*logger*/window.logger
+           );
+           var whenProdplaceSelectedItDisplayedInTitleScenario = new WhenProdplaceSelectedItDisplayedInTitleScenario(
+                /*factoryStructure*/$('#system-structure')
+            ).register(
+                /*app*/this.app.config,
+                /*logger*/window.logger
+            );
+            var whenFactoryDivisionSelectedFormIsDisplayedScenario = new WhenFactoryDivisionSelectedFormIsDisplayedScenario(
+                 /*factoryStructure*/$('#system-structure')
+            ).register(
+                /*app*/this.app.config,
+                /*logger*/window.logger
+            );
         },
         getNow: function(){
             return this.app.getContextOption('content').now;
         },
         getHistoryOnProdplace: function(id){
-            if(window.selectedProdplace){
+           // if(window.selectedProdplace){
                 return new FilteredProducitonHistoryWithinPeriodWithIntersectionsOnProdplace(
                         this.app.getContextOption('content'),
                         this.app.getContextOption('range'),
                         this.app.getContextOption('selectedGroups') || (window.page.getParameter('groups') || '').split(';'),
                         id
                     );
-            }
+           // }
         },
         update: function (options) {
             var actions = {};
@@ -327,39 +350,39 @@ function loadApp(file) {
                 }).on('loaded.jstree', function() {
                     $('#system-structure').jstree('open_all');
                 });
-                $("#system-structure").bind(
-                     "select_node.jstree", function(evt, data){                       
-                        (function(item){
-                            item = copy(item);
-                            item.className = item.type;
+                // $("#system-structure").bind(
+                //      "select_node.jstree", function(evt, data){                       
+                //         (function(item){
+                //             item = copy(item);
+                //             item.className = item.type;
                             
-                            window.dispatchEvent(new CustomEvent('eventSelected', { 'detail': item })); 
-                            app.update({
-                                selectedFactoryDivision : app.config.database().item(item.type, item.id), 
-                                selectedItem : item
-                            });         
-                        })(getSelectedItem(data.node.id))                                     
-                     }
-                );
+                //             window.dispatchEvent(new CustomEvent('eventSelected', { 'detail': item })); 
+                //             app.update({
+                //                 selectedFactoryDivision : app.config.database().item(item.type, item.id), 
+                //                 selectedItem : item
+                //             });         
+                //         })(getSelectedItem(data.node.id))                                     
+                //      }
+                // );
 
-                $("#system-structure").bind(
-                    "check_node.jstree", function(node, selected, event){                       
-                       (function(item){
-                           app.update({
-                              checkedFactoryDivision : item
-                           });         
-                       })(getSelectedItem(selected.node.id))                                     
-                    }
-               );
-               $("#system-structure").bind(
-                "uncheck_node.jstree", function(node, selected, event){                       
-                   (function(item){
-                       app.update({
-                          uncheckedFactoryDivision : item
-                       });         
-                   })(getSelectedItem(selected.node.id))                                     
-                }
-           );
+            //     $("#system-structure").bind(
+            //         "check_node.jstree", function(node, selected, event){                       
+            //            (function(item){
+            //                app.update({
+            //                   checkedFactoryDivision : item
+            //                });         
+            //            })(getSelectedItem(selected.node.id))                                     
+            //         }
+            //    );
+            //    $("#system-structure").bind(
+            //     "uncheck_node.jstree", function(node, selected, event){                       
+            //        (function(item){
+            //            app.update({
+            //               uncheckedFactoryDivision : item
+            //            });         
+            //        })(getSelectedItem(selected.node.id))                                     
+                 
+            // });
 
                 var getSelectedItem = function(id){
                     var parts = id.split('#');

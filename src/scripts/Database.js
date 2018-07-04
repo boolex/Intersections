@@ -207,40 +207,70 @@ Database.prototype.actions = function(type, id){
 }
 Database.prototype.getId = function(type){
     if(type == 'site'){
-        return 1 + Math.max.apply(
+        return (this._sid =(this._sid || Math.max.apply(
             null, 
             this.content.sites.map(function(x){ return x.id;})
-        );        
+        ))+1);
     }
     else if(type == 'department'){   
-        return 1 + Math.max.apply(
+        return (this._did =(this._did || Math.max.apply(
             null,
             this.departments().map(function(x){return x.id})
-        );     
+        ))+1);
     }
     else if(type == 'operatorStation'){
-        return 1 + Math.max.apply(
+        return (this._osid = (this._osid || Math.max.apply(
             null,
             this.operatorstations().map(function(x){return x.id})
-        );   
+        )) + 1);
     }
     else if(type == 'prodplace'){
-        return 1 + Math.max.apply(
+        return (this._ppid = (this._ppid || Math.max.apply(
             null,
             this.prodplaces().map(function(x){return x.id})
-        );   
+        ))+1);
     }
     else if(type == 'stop'){
-        return 1 + Math.max.apply(
+        return (this._stopid = (this._stopid || Math.max.apply(
             null,
             this.stops().map(function(x){return x.id ? x.id : 0})
-        );   
+        )) + 1);
     }
+    else if(type == 'order'){
+        return (this._oid =(this._oid ||  Math.max.apply(
+            null,
+            this.orders().map(function(x){return x.id ? x.id : 0})
+        )) + 1);   
+    }
+    else if(type == 'orderbatch'){
+        return (this._obid = (this._obid || Math.max.apply(
+            null,
+            this.orderbatches().map(function(x){return x.id ? x.id : 0})
+        )) + 1);        
+    }
+}
+Database.prototype.order = function(id){
+    return this.orders().find(function(x){return x.id == id});
+}
+Database.prototype.orderbatches = function(id){
+    return this.orders()
+        .map(function(order){
+            return order.batches ?
+            order.batches.map(function(orderbatch){var x = orderbatch;x.order=order;return x;}):
+                []; 
+        })
+        .reduce(function(a, b){ return a.concat(b); }, []);
+}
+Database.prototype.ordersOnOs = function(operatorStationId){
+    return this.orders().filter(function(x){return x.operatorstartion.id == operatorStationId;});
 }
 Database.prototype.teams = function(){
     return this.content.teams.map(function(team){
         return {key : team.name, value : team.number};
     });
+}
+Database.prototype.downtimeTypes = function(){
+    return this.content.dttypes;
 }
 Database.prototype.sites = function(){
     return this.content.sites;
@@ -264,6 +294,11 @@ Database.prototype.prodplaces = function(){
         })
         .reduce(function(a, b){ return a.concat(b); }, []);
 }
+Database.prototype.orders = function(){
+    return this.operatorstations().map(function(operatorstartion){
+        return operatorstartion.orders ? operatorstartion.orders.map(function(order){var x = order; x.operatorstartion = operatorstartion; return x;}):[]
+    }).reduce(function(a, b){ return a.concat(b); }, []);
+}
 Database.prototype.stops = function(){
     return this.prodplaces()
     .map(function(prodplace){
@@ -276,13 +311,34 @@ Database.prototype.set = function(prodplaceId, data){
     prodplace.operatorstartion.orders = data.orders || [];
     var orderId = this.getId('order') || 1;
     prodplace.operatorstartion.orders.forEach(function(order){
-        order.id = ++orderId;
+        if(!order.id){
+            order.id = ++orderId;
+        }
     });
 
     var anyOrderId;
     if(prodplace.operatorstartion.orders && prodplace.operatorstartion.orders.length > 0){
         anyOrderId = prodplace.operatorstartion.orders [0].id;
     }
+    prodplace.operatorstartion.orders.forEach(function(order){
+        order.producedUnits = (data.putimeends ? data.putimeends.filter(function(unit){
+            return unit.order.id == order.id;
+        }).map(function(unit){
+            return {time:unit.time, amount:unit.amount};
+        }) : []) ;
+
+        order.startedUnits = (data.putimestarts ? data.putimestarts.filter(function(unit){
+            return unit.order.id == order.id;
+        }).map(function(unit){
+            return {time:unit.time, amount:unit.amount};
+        }) : []) ;
+
+        order.scrappedUnits = (data.putimescrappeds ? data.putimescrappeds.filter(function(unit){
+            return unit.order.id == order.id;
+        }).map(function(unit){
+            return {time:unit.time, amount:unit.amount};
+        }) : []) ;
+    });
     
     (data.orderbatches || []).filter(function(x){return x.order == null || x.order.id == null}).forEach(function(orderbatch){
         orderbatch.order = {id :  anyOrderId}

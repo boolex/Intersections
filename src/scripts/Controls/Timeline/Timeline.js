@@ -1,3 +1,8 @@
+/*
+    events:
+        eventCreated
+        eventSelected
+*/
 var Timeline = function (history, groups, now, logger) {
     this.history = history;
     this.groups = groups;
@@ -38,8 +43,11 @@ Timeline.prototype.visualize=function(container, onReady){
     var groups = new vis.DataSet();    
     groups.add({id:'orders',content:'orders'});
     groups.add({id:'orderbatches',content:'orderbatches'});
-    groups.add({id:'shifts',content:'shifts'})
-    groups.add({id:'stops',content:'stops'})
+    groups.add({id:'shifts',content:'shifts'});
+    groups.add({id:'stops',content:'stops'});
+    groups.add({id:'putimeend',content:'Amount Produced'});
+    groups.add({id:'putimestart',content:'Amount Started'});
+    groups.add({id:'putimescrapped',content:'Amount Scrapped'});
     this.timeLine.setGroups(groups);   
  
     return this;
@@ -48,6 +56,9 @@ Timeline.prototype.registerSystemEvents = function(timeline, logger){
     timeline.itemsData.on('*', function (event, properties) {
         logger.system("event : " + toString(event) + "; Properties : " + toString(properties));
     });     
+}
+Timeline.prototype.itemCreated = function(handler){
+    (this.createdHandlers = this.createdHandlers || []).push(handler);
 }
 Timeline.prototype.timeLineOptions = function(timeline, onReady,emptyTimeline){
     var options = {
@@ -69,10 +80,12 @@ Timeline.prototype.timeLineOptions = function(timeline, onReady,emptyTimeline){
 Timeline.prototype.itemAdded = function(item, callback, logger){
     logger.log('item added');
     callback(item);
+    window.dispatchEvent(new CustomEvent('eventCreated', { 'detail': item }));  
 }
 Timeline.prototype.itemUpdated = function(item, callback, logger){
     logger.log('item updated');
     callback(item);
+   // window.dispatchEvent(new CustomEvent('eventCreated', { 'detail': item })); 
 }
 Timeline.prototype.itemMoved = function(item, callback, logger){
     logger.log('item moved');

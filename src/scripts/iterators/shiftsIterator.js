@@ -6,18 +6,20 @@ var getShifts = function (content) {
 				site.departments.forEach(function (department, index, array) {
 					if(department.operatorstations){
 						department.operatorstations.forEach(function (operatorstation, index, array) {	
-							operatorstation.prodplaces.forEach(function(prodplace){
-								if(operatorstation.shifts){
-									operatorstation.shifts.forEach(function (shift, index, array) {
-										var item = copy(shift);
-										item.operatorstation = operatorstation;
-										item.department = department;
-										item.site = site;
-										item.prodplace =  prodplace;
-										shifts.push(item);
-									});
-								}
-							});	
+							if(operatorstation.prodplaces){
+								operatorstation.prodplaces.forEach(function(prodplace){
+									if(operatorstation.shifts){
+										operatorstation.shifts.forEach(function (shift, index, array) {
+											var item = copy(shift);
+											item.operatorstation = operatorstation;
+											item.department = department;
+											item.site = site;
+											item.prodplace =  prodplace;
+											shifts.push(item);
+										});
+									}
+								});	
+							}
 						});
 					}
 				});

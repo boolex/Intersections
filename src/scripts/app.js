@@ -22,6 +22,9 @@ App.prototype.RegisterEvents = function () {
     if (this.config.display != null) {
         this.config.display(this);
     }
+    if(this.config.registerEventHandlers){
+        this.config.registerEventHandlers();
+    }
     if (this.config.registerScenarios != null) {
         this.config.registerScenarios();
     }

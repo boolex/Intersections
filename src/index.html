@@ -84,19 +84,39 @@
 	<script type="text/javascript" src="scripts/Scenario/WhenProdplaceSelectedThenTimelineDrawnScenario.js"></script>
 	<script type="text/javascript" src="scripts/Scenario/WhenSavePressedTimelineStateFetched.js"></script>
 	<script type="text/javascript" src="scripts/Scenario/WhenTimelineEventSelectedEditFormShown.js"></script>
+	<script type="text/javascript" src="scripts/Scenario/WhenUserCreatedNewEventItsInitializedScenario.js"></script>
+	<script type="text/javascript" src="scripts/Scenario/WhenProdplaceSelectedItDisplayedInTitleScenario.js"></script>
+	<script type="text/javascript" src="scripts/Scenario/WhenFactoryDivisionSelectedFormIsDisplayedScenario.js"></script>
+
 	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/ObjectEditForm.js"></script>
 	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/BaseForm.js"></script>	
 	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/ShiftForm.js"></script>	
 	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/ProdplaceForm.js"></script>	
 	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/OperatorStationForm.js"></script>	
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/OrderForm.js"></script>	
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/OrderbatchForm.js"></script>	
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/StopForm.js"></script>	
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/DepartmentForm.js"></script>
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/SiteForm.js"></script>
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/FactoryForm.js"></script>
+	<script type="text/javascript" src="scripts/Windows/ObjectEditForm/Objects/PuTimeEndForm.js"></script>
 </head>
 <body>
 	<div id="log"></div>
 	<div id="header">
-		file: 	<div id="fileName"></div>
-		now:	<div id="scenario_now"></div>
-		<a href="javascript:void(0)" id="download">download</a>
-		<button id="save">save</button>
+		<table>
+			<tr>
+				<td>
+						file: 	<div id="fileName"></div>
+						now:	<div id="scenario_now"></div>
+						<a href="javascript:void(0)" id="download">download</a>
+						<button id="save">save</button>
+				</td>
+				<td>
+					Prodplace : <label id="displayProdplace">-</label>
+				</td>
+			</tr>
+		</table>		
 	</div>
 	<div id="rangePicker"></div>
 	<table style="width:100%">

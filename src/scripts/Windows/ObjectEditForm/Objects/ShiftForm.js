@@ -17,13 +17,34 @@ ShiftForm.prototype.show = function(container){
             var teamNumber = parseInt(newValue);
             var name = self.teams().filter(function(x){return x.value == teamNumber;})[0]['key'];
             item['content'] = name;
+            if(!item.tags){
+                item.tags = {};
+            }
             item.tags.changeNumber = teamNumber;
             item.tags.name = name;
             item.source.changeType = teamNumber;
-            window.timeline.timeLine.itemsData.update(item)
+            window.timeline.timeLine.itemsData.update(item);
         },
         "select",
         this.teams()
+    );
+    this.showDateProperty(
+        "from",
+        this.shiftInfo.start,
+        function(item, newValue){
+            self.shiftInfo.source.start = newValue;
+            self.shiftInfo.start = newValue;
+            window.timeline.timeLine.itemsData.update(self.shiftInfo);
+        }
+    );
+    this.showDateProperty(
+        "to",
+        this.shiftInfo.end,
+        function(item, newValue){
+            self.shiftInfo.source.end = newValue;
+            self.shiftInfo.end = newValue;
+            window.timeline.timeLine.itemsData.update(self.shiftInfo);
+        }
     );
 }
 if(window.editforms==null){

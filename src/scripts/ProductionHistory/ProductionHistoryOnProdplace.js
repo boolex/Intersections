@@ -12,7 +12,7 @@ ProductionHistoryOnProdplace.prototype.get = function () {
 }
 
 ProductionHistoryOnProdplace.prototype.buildItems =function(content){
-    var items = new ProductionHistory(content) .get();
+    var items = new ProductionHistory(content).get();
     var prodplaceid = this.prodplaceid;
     return items.filter(function(item){ 
         return item.source.prodplace.id == prodplaceid

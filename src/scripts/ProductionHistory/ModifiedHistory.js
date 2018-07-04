@@ -25,6 +25,15 @@ ModifiedHistory.prototype.add = function(result, type, item){
     else if(type == 'shift'){
         return this.addShift(result, item);
     }
+    else if(type == 'putimeend'){
+        return this.addPuTimeEnd(result, item);
+    }
+    else if(type == 'putimestart'){
+        return this.addPuTimeStart(result, item);
+    }
+    else if(type == 'putimescrapped'){
+        return this.addPuTimeScrapped(result, item);
+    }    
     else if(item.type == 'range'){       
         var newItem = JSON.parse(JSON.stringify(item));
         newItem.type = ({'orderbatches':'orderbatch', 'orders':'order', 'shifts':'shift', 'stops':'stop'})[item.group];
@@ -64,9 +73,21 @@ ModifiedHistory.prototype.add = function(result, type, item){
                 operatorstation :this.prodplace.operatorstartion
             }
         }
+        
         return this.add(result, newItem.type, newItem);
     }
-    throw 'Unknown type of event';
+    else if(item.group == 'putimeend' || item.group == 'putimestart' || item.group == 'putimescrapped'){
+        var newItem = JSON.parse(JSON.stringify(item));
+        newItem.source = {
+            time : item.start.yyyymmddhhmmss(),
+            prodplace: this.prodplace,
+            operatorstation : this.prodplace.operatorstartion
+        }
+        return this.add(result, newItem.group, newItem);
+    }
+    else{
+        throw 'Unknown type of event';
+    }
 }
 ModifiedHistory.prototype.addOrderBatch = function(result , item){
     if(!result.orderbatches){ result.orderbatches = [];}
@@ -127,4 +148,31 @@ ModifiedHistory.prototype.normalizeShift = function(item){
         shift.end = item.end.yyyymmddhhmmss();
     }
     return shift;
+}
+ModifiedHistory.prototype.addPuTimeEnd= function(result , item){
+    if(!result.putimeends){ result.putimeends = [];}
+    result.putimeends.push(this.normalizePuTimeEnd(item));
+    return result;
+}
+ModifiedHistory.prototype.normalizePuTimeEnd = function(item){
+    var putimeend = item.source;
+    return putimeend;
+}
+ModifiedHistory.prototype.addPuTimeStart= function(result , item){
+    if(!result.putimestarts){ result.putimestarts = [];}
+    result.putimestarts.push(this.normalizePuTimeStart(item));
+    return result;
+}
+ModifiedHistory.prototype.normalizePuTimeStart = function(item){
+    var putimestart = item.source;
+    return putimestart;
+}
+ModifiedHistory.prototype.addPuTimeScrapped= function(result , item){
+    if(!result.putimescrappeds){ result.putimescrappeds = [];}
+    result.putimescrappeds.push(this.normalizePuTimeScrapped(item));
+    return result;
+}
+ModifiedHistory.prototype.normalizePuTimeScrapped = function(item){
+    var putimescrapped = item.source;
+    return putimescrapped;
 }

@@ -9,7 +9,12 @@ var WhenProdplaceSelectedThenTimelineDrawnScenario = function(factoryStructure){
 }
 WhenProdplaceSelectedThenTimelineDrawnScenario.prototype.register = function(app, logger){
     (function(scenario){
-        scenario.OnProdplaceSelected(scenario, function(prodplaceId){
+        scenario.OnProdplaceSelected(scenario, function(prodplaceId){            
+            window.SelectedProdplaceId = prodplaceId;//????
+            window.selectedProdplace = app.database().prodplace(window.SelectedProdplaceId);
+            if(!window.selectedProdplace){
+                throw 'Prodplace with id ' + prodplaceId + ' does not exist';
+            }
             scenario.DrawTimeline(scenario, app, prodplaceId, logger);
         }, logger)
     })(this);

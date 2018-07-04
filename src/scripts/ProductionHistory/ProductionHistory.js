@@ -211,6 +211,13 @@ function buildProducedUnits(content) {
                 orderId: 123,
                 orderNumber: 'test',
                 articleNumber: 'ddss'
+            },
+            source:{
+                prodplace : unit.prodplace,
+                time : unit.time,
+                amount : unit.amount,
+                orderid : unit.order.id,
+                order : unit.order
             }
         });
     });

@@ -47,6 +47,17 @@ OperatorStationForm.prototype.show = function(container){
         },
         'number'
     );
+
+    this.database.actions('operatorStation', this.osInfo.id).forEach(function(action){
+        self.showAction(
+            action.name,
+            function(){
+                action.action(function(){
+                    window.dispatchEvent(new CustomEvent('contentmodified', { 'detail': {'type':'OperatorStation'} })); 
+                });
+            }
+        );
+    });
 }
 if(window.editforms==null){
     window.editforms = {};
