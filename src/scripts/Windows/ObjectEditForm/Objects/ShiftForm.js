@@ -15,14 +15,17 @@ ShiftForm.prototype.show = function(container){
         this.shiftInfo.source.changeType,
         function(item, newValue){
             var teamNumber = parseInt(newValue);
-            var name = self.teams().filter(function(x){return x.value == teamNumber;})[0]['key'];
+            /*var name = self.teams().filter(function(x){return x.value == teamNumber;})[0]['key'];
             item['content'] = name;
+           
+            item.tags.name = name;*/
             if(!item.tags){
                 item.tags = {};
             }
-            item.tags.changeNumber = teamNumber;
-            item.tags.name = name;
+            item.tags.changeNumber = teamNumber;           
             item.source.changeType = teamNumber;
+
+            item.content = new EventContent('shift', item, self.database).get();
             window.timeline.timeLine.itemsData.update(item);
         },
         "select",
@@ -32,8 +35,11 @@ ShiftForm.prototype.show = function(container){
         "from",
         this.shiftInfo.start,
         function(item, newValue){
+            newValue = normalizeDateTime(newValue);
             self.shiftInfo.source.start = newValue;
             self.shiftInfo.start = newValue;
+
+            self.shiftInfo.content = new EventContent('shift', self.shiftInfo, self.database).get();
             window.timeline.timeLine.itemsData.update(self.shiftInfo);
         }
     );
@@ -41,8 +47,11 @@ ShiftForm.prototype.show = function(container){
         "to",
         this.shiftInfo.end,
         function(item, newValue){
+            newValue = normalizeDateTime(newValue);
+            
             self.shiftInfo.source.end = newValue;
             self.shiftInfo.end = newValue;
+            self.shiftInfo.content = new EventContent('shift', self.shiftInfo, self.database).get();
             window.timeline.timeLine.itemsData.update(self.shiftInfo);
         }
     );

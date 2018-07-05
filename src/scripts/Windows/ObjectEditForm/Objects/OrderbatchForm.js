@@ -21,6 +21,8 @@ OrderbatchForm.prototype.show = function(container){
         this.orderbatchInfo.source.id,
         function(item, newValue){
             self.orderbatchInfo.source.id = parseInt(newValue);
+            self.orderbatchInfo.content = new EventContent('orderbatch', self.orderbatchInfo, self.database).get();
+            window.timeline.timeLine.itemsData.update(self.orderbatchInfo);
         },
         'number'
     ); 
@@ -31,7 +33,8 @@ OrderbatchForm.prototype.show = function(container){
             var order = self.database.order(newValue);
             self.orderbatchInfo.source.order = order;
             self.orderbatchInfo.orderId = order.id;
-            window.timeline.timeLine.itemsData.update(self.orderbatchInfo)
+            self.orderbatchInfo.content = new EventContent('orderbatch', self.orderbatchInfo, self.database).get();
+            window.timeline.timeLine.itemsData.update(self.orderbatchInfo);
         },
         'select',
         this.ordersOnOs()
@@ -40,18 +43,24 @@ OrderbatchForm.prototype.show = function(container){
         "from",
         this.orderbatchInfo.start,
         function(item, newValue){
+            newValue = normalizeDateTime(newValue);
+
             self.orderbatchInfo.source.start = newValue;
-            self.orderbatchInfo.start = newValue;
-            window.timeline.timeLine.itemsData.update(self.orderbatchInfo)
+            self.orderbatchInfo.start = new Date(Date.parse(newValue));
+            self.orderbatchInfo.content = new EventContent('orderbatch', self.orderbatchInfo, self.database).get();
+            window.timeline.timeLine.itemsData.update(self.orderbatchInfo);
         }
     );
     this.showDateProperty(
         "to",
         this.orderbatchInfo.end,
         function(item, newValue){
+            newValue = normalizeDateTime(newValue);
+
             self.orderbatchInfo.source.end = newValue;
             self.orderbatchInfo.end = newValue;
-            window.timeline.timeLine.itemsData.update(self.orderbatchInfo)
+            self.orderbatchInfo.content = new EventContent('orderbatch', self.orderbatchInfo, self.database).get();
+            window.timeline.timeLine.itemsData.update(self.orderbatchInfo);
         }
     );
 }

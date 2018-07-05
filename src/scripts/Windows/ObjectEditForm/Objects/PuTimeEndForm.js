@@ -20,7 +20,10 @@ PuTimeEndForm.prototype.show = function(container){
         'amount', 
         this.info.source.amount,
         function(item, newValue){
-            self.info.source.amount = parsefloat(newValue);
+            self.info.source.amount = parseFloat(newValue);
+
+            self.info.content = new EventContent('putime', self.info, self.database).get();
+            window.timeline.timeLine.itemsData.update(self.info);
         },
         'number'
     ); 
@@ -31,7 +34,9 @@ PuTimeEndForm.prototype.show = function(container){
             var order = self.database.order(newValue);
             self.info.source.order = order;
             self.info.orderId = order.id;
-            window.timeline.timeLine.itemsData.update(self.info)
+
+            self.info.content = new EventContent('putime', self.info, self.database).get();
+            window.timeline.timeLine.itemsData.update(self.info);
         },
         'select',
         this.ordersOnOs()
@@ -40,9 +45,12 @@ PuTimeEndForm.prototype.show = function(container){
         "time",
         this.info.start,
         function(item, newValue){
+            newValue = normalizeDateTime(newValue);
+            
             self.info.source.time = newValue;
             self.info.start = newValue;
-            window.timeline.timeLine.itemsData.update(self.info)
+            self.info.content = new EventContent('putime', self.info, self.database).get();
+            window.timeline.timeLine.itemsData.update(self.info);
         }
     );   
 }

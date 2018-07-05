@@ -26,7 +26,7 @@ ManualItem.prototype.get = function(){
     return this.item;
 }
 ManualItem.prototype.content = function(){
-    return this.groupToClass(this.type);
+    return new EventContent(this.itemType(this.type), this.item, this.database).get();
 }
 ManualItem.prototype.groupToClass = function(group){
     switch(group){
@@ -44,6 +44,26 @@ ManualItem.prototype.groupToClass = function(group){
             return 'putimestart';
         case 'putimescrapped':
             return 'putimescrapped';
+        default:
+            return 'unknown';
+    }    
+}
+ManualItem.prototype.itemType =function(group){
+    switch(group){
+        case 'orders':
+            return 'order';
+        case 'orderbatches':
+            return 'orderbatch';
+        case 'stops':
+            return 'stop';
+        case 'shifts':
+            return 'shift';
+        case 'putimeend':
+            return 'putime';
+        case 'putimestart':
+            return 'putime';
+        case 'putimescrapped':
+            return 'putime';
         default:
             return 'unknown';
     }    

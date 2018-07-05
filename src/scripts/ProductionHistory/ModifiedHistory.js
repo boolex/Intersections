@@ -34,7 +34,21 @@ ModifiedHistory.prototype.add = function(result, type, item){
     else if(type == 'putimescrapped'){
         return this.addPuTimeScrapped(result, item);
     }    
-    else if(item.type == 'range'){       
+    else if(
+        ['putimeend', 'putimestart', 'putimescrapped'].indexOf(item.group.toLowerCase()) >= 0
+    ){//added point events
+        var newItem = {};
+        newItem.source = {
+            order : {id : item.source.orderid},
+            prodplace:this.prodplace,
+            operatorstation :this.prodplace.operatorstartion,
+            time: item.source.time,
+            amount:item.source.amount
+        };
+        
+        return this.add(result, item.group.toLowerCase(), newItem);  
+    }
+    else if(item.type == 'range'){//added range events
         var newItem = JSON.parse(JSON.stringify(item));
         newItem.type = ({'orderbatches':'orderbatch', 'orders':'order', 'shifts':'shift', 'stops':'stop'})[item.group];
         newItem.start = item.start.yyyymmddhhmmss();
@@ -76,14 +90,23 @@ ModifiedHistory.prototype.add = function(result, type, item){
         
         return this.add(result, newItem.type, newItem);
     }
-    else if(item.group == 'putimeend' || item.group == 'putimestart' || item.group == 'putimescrapped'){
+    else if(item.eventType && item.eventType.toLowerCase && 
+        (['putimeend', 'putimestart', 'putimescrapped'].indexOf(item.eventType.toLowerCase()) >= 0)         
+    ){        
+        item.source.order = {id : item.source.order ? item.source.order.id : null};
+        item.source.prodplace = {id : item.source.prodplace ? item.source.prodplace.id : null};
         var newItem = JSON.parse(JSON.stringify(item));
-        newItem.source = {
-            time : item.start.yyyymmddhhmmss(),
-            prodplace: this.prodplace,
-            operatorstation : this.prodplace.operatorstartion
+
+        var time = item.start
+        if(typeof item.start == 'string'){
+            time = time.replace('T', ' ');
+            time = time.replace('.000Z', '');
         }
-        return this.add(result, newItem.group, newItem);
+        else{
+            time = item.start.yyyymmddhhmmss();
+        }
+        newItem.source.time = time;
+        return this.add(result, newItem.eventType.toLowerCase(), newItem);        
     }
     else{
         throw 'Unknown type of event';
@@ -155,24 +178,31 @@ ModifiedHistory.prototype.addPuTimeEnd= function(result , item){
     return result;
 }
 ModifiedHistory.prototype.normalizePuTimeEnd = function(item){
-    var putimeend = item.source;
-    return putimeend;
+    return this.normalizePuTime(item);
+}
+ModifiedHistory.prototype.normalizePuTimeScrapped = function(item){
+    return this.normalizePuTime(item);
+}
+ModifiedHistory.prototype.normalizePuTimeStart = function(item){
+    return this.normalizePuTime(item);
+}
+ModifiedHistory.prototype.normalizePuTime = function(item){
+    var putime = {};
+    putime.order = {};
+    if(item.source.order){
+        putime.order.id = item.source.order.id;
+    }
+    putime.amount = item.source.amount;
+    putime.time = item.source.time;
+    return putime;
 }
 ModifiedHistory.prototype.addPuTimeStart= function(result , item){
     if(!result.putimestarts){ result.putimestarts = [];}
     result.putimestarts.push(this.normalizePuTimeStart(item));
     return result;
 }
-ModifiedHistory.prototype.normalizePuTimeStart = function(item){
-    var putimestart = item.source;
-    return putimestart;
-}
 ModifiedHistory.prototype.addPuTimeScrapped= function(result , item){
     if(!result.putimescrappeds){ result.putimescrappeds = [];}
     result.putimescrappeds.push(this.normalizePuTimeScrapped(item));
     return result;
-}
-ModifiedHistory.prototype.normalizePuTimeScrapped = function(item){
-    var putimescrapped = item.source;
-    return putimescrapped;
 }

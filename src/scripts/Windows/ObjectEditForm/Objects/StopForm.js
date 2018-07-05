@@ -23,6 +23,8 @@ StopForm.prototype.show = function(container){
         this.info.source.id,
         function(item, newValue){
             self.info.source.id = parseInt(newValue);
+            self.info.content = new EventContent('stop', self.info, self.database).get();
+            window.timeline.timeLine.itemsData.update(self.info);
         },
         'number'
     );
@@ -50,7 +52,8 @@ StopForm.prototype.show = function(container){
             // item.tags.name = name;
            
             
-             window.timeline.timeLine.itemsData.update(self.info)
+            self.info.content = new EventContent('stop', self.info, self.database).get();
+            window.timeline.timeLine.itemsData.update(self.info);
         },
         "select",
         this.downtimeTypes()
@@ -59,8 +62,11 @@ StopForm.prototype.show = function(container){
         "from",
         this.info.from || this.info.start,
         function(item, newValue){
+            newValue = normalizeDateTime(newValue);
+
             self.info.source.from = newValue;
             self.info.start = newValue;
+            self.info.content = new EventContent('stop', self.info, self.database).get();
             window.timeline.timeLine.itemsData.update(self.info)
         }
     );
@@ -68,8 +74,11 @@ StopForm.prototype.show = function(container){
         "to",
         this.info.to || this.info.end,
         function(item, newValue){
+            newValue = normalizeDateTime(newValue);
+            
             self.info.source.to = newValue;
             self.info.end = newValue;
+            self.info.content = new EventContent('stop', self.info, self.database).get();
             window.timeline.timeLine.itemsData.update(self.info)
         }
     );

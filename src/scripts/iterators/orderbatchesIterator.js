@@ -10,7 +10,7 @@ var getOrderBatches = function (content) {
 								operatorstation.orders.forEach(function (order, index, array) {
 									if(operatorstation.prodplaces){
 										operatorstation.prodplaces.forEach(function(prodplace){
-											if(order.batches){
+											if(order && order.batches){
 												order.batches.forEach(function (orderBatch, index, array) {
 													var item = copy(orderBatch);
 													item.operatorstation = operatorstation;

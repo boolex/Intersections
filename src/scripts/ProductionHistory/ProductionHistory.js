@@ -1,5 +1,6 @@
 var ProductionHistory = function (content) {
     this.content = content;
+    this.database = new Database(this.content);
 };
 ProductionHistory.prototype.forEach = function (callback) {
     this.get().forEach(callback);
@@ -9,11 +10,11 @@ ProductionHistory.prototype.get = function () {
 }
 ProductionHistory.prototype.buildItems = function (content) {
     var entries = [];
-    entries = entries.concat(this.orders = buildOrders(content));
-    entries = entries.concat(this.orderBatches = buildOrderBatches(content));
-    entries = entries.concat(this.stops = buildStops(content));
-    entries = entries.concat(this.shifts = buildShifts(content));
-    entries = entries.concat(this.units = buildProducedUnits(content));
+    entries = entries.concat(this.orders = buildOrders(content, this.database));
+    entries = entries.concat(this.orderBatches = buildOrderBatches(content, this.database));
+    entries = entries.concat(this.stops = buildStops(content, this.database));
+    entries = entries.concat(this.shifts = buildShifts(content, this.database));
+    entries = entries.concat(this.units = buildProducedUnits(content, this.database));
     return entries;
 }
 ProductionHistory.prototype.getOrderBatches = function () {
@@ -76,12 +77,16 @@ function getTypeProperty(content, id, field) {
     }
     return "unknown";
 }
-function buildOrders(content) {
+function buildOrders(content, database) {
     var orders = [];
     getOrders(content).forEach(function (order, index, array) {
+        if(!order.id){
+            return;
+        }
         orders.push({
             id: order.id,
-            content: "order",
+            //content: "order",
+            content: new EventContent('order', order, database).get(),
             title: "<b>Order_Id:</b> " + order.id + "<br/><b>Start:</b> " + order.start + "<br/><b>End:</b> " + order.end + "<br/><b>Duration: </b>" + (Date.parse(order.end) - Date.parse(order.start)) / 1000 + " <b>s</b>",
             start: order.start,
             end: order.end == null ? content.now : order.end,
@@ -98,13 +103,14 @@ function buildOrders(content) {
     });
     return orders;
 };
-function buildOrderBatches(content) {
+function buildOrderBatches(content, database) {
     var orderBatches = [];
     getOrderBatches(content).forEach(function (orderBatch, index, array) {
         orderBatches.push({
             id: orderBatch.order.id + '_' + orderBatch.id,
             title: "<b>Order_Id:</b> " + orderBatch.order.id + "<br/><b>Start:</b> " + orderBatch.start + "<br/><b>End:</b> " + orderBatch.end + "<br/><b>Duration: </b>" + (Date.parse(orderBatch.end) - Date.parse(orderBatch.start)) / 1000 + " <b>s</b>",
-            content: "orderbatch",
+            content: new EventContent('orderbatch', orderBatch, database).get(),
+            //content: "orderbatch",
             start: orderBatch.start,
             end: orderBatch.end == null ? content.now : orderBatch.end,
             group: 'orderbatches',// "S" + orderBatch.site.id + "D" + orderBatch.department.id + "O" + orderBatch.operatorstation.id + "OrderBatches",
@@ -120,7 +126,7 @@ function buildOrderBatches(content) {
     });
     return orderBatches;
 }
-function buildStops(content) {
+function buildStops(content, database) {
     var stops = [];
     getStops(content).forEach(function (stop, index, array) {
         var tags = {
@@ -138,7 +144,8 @@ function buildStops(content) {
         }
         stops.push({
             id: "stop_" + stop.id,
-            content: "[" + stop.from + "]  -  [" + stop.to + "] " + (stop.dttype == null ? "uncoded" : stop.dttype.name),
+            //content: "[" + stop.from + "]  -  [" + stop.to + "] " + (stop.dttype == null ? "uncoded" : stop.dttype.name),
+            content: new EventContent('stop', stop, database).get(),
             title: tooltip({
                 "loss": (stop.type == null ? "uncoded" : (getTypeProperty(content, stop.type, 'loss').toString())),
                 "type": (stop.type == null ? "uncoded" : ('[id=' + stop.type + '] ' + getTypeProperty(content, stop.type, 'name'))),
@@ -158,13 +165,14 @@ function buildStops(content) {
     });
     return stops;
 }
-function buildShifts(content) {
+function buildShifts(content, database) {
     var shifts = [];
     getShiftPeriods(content).forEach(function (shift, index, array) {
         shifts.push({
             id: shift.operatorstation.id + "_" + shift.start,
             title: "<b>" + (shift.changeType > 0 ? ("Team_" + shift.changeType) : "Not plan prod") + "</b><br/><b>Start:</b> " + shift.start + "<br/><b>End:</b> " + shift.end + "<br/><b>Duration: </b>" + (Date.parse(shift.end) - Date.parse(shift.end) / 1000) + " <b>s</b>",
-            content: ((shift.changeType > 0) ? ("Team_" + shift.changeType) : "Not plan prod"),
+            content: new EventContent('shift', shift, database).get(),
+            //content: ((shift.changeType > 0) ? ("Team_" + shift.changeType) : "Not plan prod"),
             start: shift.start,
             end: shift.end,
             group: 'shifts',//"S" + shift.site.id + "D" + shift.department.id + "O" + shift.operatorstation.id + "Shifts",
@@ -191,19 +199,17 @@ function getTeamName(content, number) {
         return "unknown";
     }
 }
-function buildProducedUnits(content) {
+function buildProducedUnits(content, database) {
     var units = [];
     getProducedUnits(content).forEach(function (unit, index, array) {
         units.push({
             id: unit.order.id + '_' + unit.type + "_" + unit.time,
             title: "<b>Order_Id:</b> " + unit.order.id + "<br/><b>Time:</b> " + unit.time,
-            content: "Amount: " + unit.amount.toString(),
+            content: new EventContent('putime', unit, database).get(),
             start: unit.time,
-            end: unit.time,
-            group: "S" + unit.site.id
-            + "D" + unit.department.id
-            + "O" + unit.operatorstation.id
-            + "Units" + unit.type,
+           // end: unit.time,
+            group: unit.type.toLowerCase(),
+            className: unit.type.toLowerCase(),
             type: "point",
             eventType: unit.type,
             amount: unit.amount,

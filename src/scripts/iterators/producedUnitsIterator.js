@@ -13,6 +13,9 @@ var getProducedUnits = function (content) {
 			return;
 			operatorstation.prodplaces.forEach(function(prodplace){
 				operatorstation.orders.forEach(function (order, index, array) {
+					if(!order){
+						return;
+					}
 					if(order.producedUnits){
 						order.producedUnits.forEach(function (unit, index, array) {
 							var item = copy(unit);
