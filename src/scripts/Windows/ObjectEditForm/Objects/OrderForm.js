@@ -45,6 +45,22 @@ OrderForm.prototype.show = function(container){
             window.timeline.timeLine.itemsData.update(self.orderInfo)
         }
     );
+    this.showProperty(
+        'goalCycleTime', 
+        this.orderInfo.source.opUnitTime,
+        function(item, newValue){
+            self.orderInfo.source.opUnitTime = parseFloat(newValue);
+        },
+        'number'
+    ); 
+    this.showProperty(
+        'Distribution factor', 
+        this.orderInfo.source.distributionFactor,
+        function(item, newValue){
+            self.orderInfo.source.distributionFactor = parseFloat(newValue);
+        },
+        'number'
+    ); 
 }
 if(window.editforms==null){
     window.editforms = {};

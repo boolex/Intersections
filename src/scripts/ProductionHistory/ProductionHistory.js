@@ -203,7 +203,7 @@ function buildProducedUnits(content, database) {
     var units = [];
     getProducedUnits(content).forEach(function (unit, index, array) {
         units.push({
-            id: unit.order.id + '_' + unit.type + "_" + unit.time,
+            id: unit.order.id + '_' + unit.type + "_" + unit.time  + "_" + (Math.round(Math.random() * 1000000)).toString(),
             title: "<b>Order_Id:</b> " + unit.order.id + "<br/><b>Time:</b> " + unit.time,
             content: new EventContent('putime', unit, database).get(),
             start: unit.time,

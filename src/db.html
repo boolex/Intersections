@@ -1,0 +1,334 @@
+<html>
+    <head>
+        <script src="lib/gojs/go-debug.js"></script>
+    </head>
+    <body>
+        <div id="sample">
+            <div id="myDiagramDiv" style="background-color: white; border: solid 1px black; width: 100%; height: 500px"></div>
+            <p>
+            This sample displays a diagram of two trees sharing a single root node growing in opposite directions.
+            The immediate child data of the ROOT node have a "dir" property
+            that describes the direction that subtree should grow.
+            </p>
+            <p>
+            Unlike many <b>GoJS</b> apps, there is no <a>Diagram.layout</a> assigned.
+            Layouts are performed in code -- a separate <a>TreeLayout</a> for each subtree.
+            Each tree layout works on a subset of the nodes.
+            The <b>separatePartsByLayout</b> function produces two separate collections of Nodes and Links,
+            one for each direction, and thus one for each tree layout.
+            </p>
+          </div>
+          
+    </body>
+</html>
+<script>
+    var dbScriptModel = function(){
+        var nodes = [];
+        var links = [];
+        for(var method in methods){
+            if(methods.hasOwnProperty(method) && nodes.find(function(m){return m.key == method}) === undefined){
+                nodes.push({ key: method, text: method, type:'method' });   
+                
+                methods[method].paths.forEach(function(path){
+                    if(undefined == nodes.find(function(m){return m.key == path.script})){
+                        nodes.push({ key: path.script, text: path.script, type:'method-path' });                           
+                    }
+                    if(undefined == links.find(function(m){return m.from == method && m.to== path.script;})){
+                        links.push({from : method, to: path.script, text : path.condition});
+                    }
+                });
+
+                methods[method].scripts.forEach(function(script){
+                    script.paths.forEach(function(path){
+                        if(undefined == nodes.find(function(m){return m.key == path.script})){
+                            nodes.push({ key: path.script, text: path.script, type:'inner-path' }); 
+                        }  
+                        if(undefined == links.find(function(m){return m.from == script.script && m.to== path.script;})){
+                            links.push({from : script.script, to: path.script, text : path.condition});
+                        }
+                    });
+                });
+            }
+        }
+        return {nodes:nodes, links:links};
+    };
+   
+    /*group, grouptype,period,mode*/
+    var methods = {
+        "OEE_Get" : {
+            paths : [
+                {
+                    condition : "group=1&grouptype=undefined",
+                    script:"spASL_Std_OEE_Group"
+                },
+                {
+                    condition : "group=1&grouptype=1|2|3",
+                    script:"spASL_Std_OEE_GroupByFactoryDivision"
+                },
+                {
+                    condition:"period=Combined||max||#AslPeriod||ActiveOrders",
+                    script:"spASL_Std_OEEMO_Combined"
+                },
+                {
+                    condition:"period=ActiveOrders",
+                    script:"spASL_Std_OEEMO"
+                },
+                {
+                    condition:"group=undefined&period=![ActiveOrders, Combined||max||#AslPeriod||ActiveOrders]",
+                    script:"spASL_Std_OEE_Get"
+                }
+            ],
+            scripts :[
+                {
+                    script: "spASL_Std_OEE_Get",
+                    paths : [
+                        {
+                            condition:null,
+                            script :"spASL_Std_OEE"
+                        }
+                    ]
+                },
+                {
+                    script: "spASL_Std_OEEMO",
+                    paths : [
+                        {
+                            condition:null,
+                            script :"spASL_Std_OEE"
+                        }
+                    ]
+                },
+                {
+                    script: "spASL_Std_OEEMO_Combined",
+                    paths : [
+                        {
+                            condition:null,
+                            script :"spASL_Std_OEE"
+                        }
+                    ]
+                },
+                {
+                    script: "spASL_Std_OEE",
+                    paths : [
+                        {
+                            condition:null,
+                            script :"fnASL_Std_OEEStats"
+                        }
+                    ]
+                },
+                {
+                    script: "fnASL_Std_OEEStats",
+                    paths : [
+                        {
+                            condition:"period=[Range|All]&mode=single",
+                            script :"fnASL_Std_OEEStats_Range"
+                        },
+                        {
+                            condition:"period=[Range|All]&mode=serial",
+                            script :"fnASL_Std_OEEStats_Range_Serial"
+                        },
+                        {
+                            condition:"period=[Range|All]&mode=parallel",
+                            script :"fnASL_Std_OEEStats_Range_Parallel"
+                        },
+                        {
+                            condition:"period=[CurrentOrder]&mode=single",
+                            script :"fnASL_Std_OEEStats_Order"
+                        },
+                        {
+                            condition:"period=[CurrentOrder]&mode=serial",
+                            script :"fnASL_Std_OEEStats_Order_Serial"
+                        },
+                        {
+                            condition:"period=[CurrentOrder]&mode=parallel",
+                            script :"fnASL_Std_OEEStats_Order_Parallel"
+                        },
+                        {
+                            condition:"period=[CurrentOrderBatch]",
+                            script :"fnASL_Std_OEEStats_OrderBatch"
+                        },
+                        {
+                            condition:"period=[Combined&CurrentOrder]&mode=single",
+                            script :"fnASL_Std_OEEStats_Order"
+                        },
+                        {
+                            condition:"period=[Combined&CurrentOrder]&mode=serial",
+                            script :"fnASL_Std_OEEStats_Order_Serial"
+                        },
+                        {
+                            condition:"period=[Combined&CurrentOrder]&mode=parallel",
+                            script :"fnASL_Std_OEEStats_Order_Parallel"
+                        },
+                        {
+                            condition:"period=[CurrentShift|CurrentShiftFull]&mode=single",
+                            script :"fnASL_Std_OEEStats_Range"
+                        },
+                        {
+                            condition:"period=[CurrentShift|CurrentShiftFull]&mode=serial",
+                            script :"fnASL_Std_OEEStats_Range_Serial"
+                        },
+                        {
+                            condition:"period=[CurrentShift|CurrentShiftFull]&mode=parallel",
+                            script :"fnASL_Std_OEEStats_Range_Parallel"
+                        },
+                        {
+                            condition:"period=[ActiveOrders]&mode=single",
+                            script :"fnASL_Std_OEEStats_ActiveOrders"
+                        },
+                        {
+                            condition:"period=[ActiveOrders]&mode=serial",
+                            script :"fnASL_Std_OEEStats_ActiveOrders_Serial"
+                        },
+                        {
+                            condition:"period=[ActiveOrders]&mode=parallel",
+                            script :"fnASL_Std_OEEStats_ActiveOrders_Parallel"
+                        },
+                        {
+                            condition:"period=[Combined&ActiveOrders]&mode=single",
+                            script :"fnASL_Std_OEEStats_ActiveOrders"
+                        },
+                        {
+                            condition:"period=[Combined&ActiveOrders]&mode=serial",
+                            script :"fnASL_Std_OEEStats_ActiveOrders_Serial"
+                        },
+                        {
+                            condition:"period=[Combined&ActiveOrders]&mode=parallel",
+                            script :"fnASL_Std_OEEStats_ActiveOrders_Parallel"
+                        },
+                        {
+                            condition:"period=[Cross]",
+                            script :"fnASL_Std_OEEStats_CrossAll"
+                        },
+                        {
+                            condition:"period=[#Other]&mode=single",
+                            script :"fnASL_Std_OEEStats_Range"
+                        },
+                        {
+                            condition:"period=[#Other]&mode=serial",
+                            script :"fnASL_Std_OEEStats_Range_Serial"
+                        },
+                        {
+                            condition:"period=[#Other]&mode=parallel",
+                            script :"fnASL_Std_OEEStats_Range_Parallel"
+                        }
+                    ]
+                }
+            ]
+        }
+    };
+    
+    init();
+   function init() {
+    if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
+    var $ = go.GraphObject.make;  // for conciseness in defining templates
+
+    myDiagram =
+      $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
+        {
+          initialAutoScale: go.Diagram.Uniform,  // an initial automatic zoom-to-fit
+          contentAlignment: go.Spot.Center,  // align document to the center of the viewport
+          layout:$(go.TreeLayout, { nodeSpacing: 10 })
+            // $(go.ForceDirectedLayout,  // automatically spread nodes apart
+            //   { maxIterations: 200, defaultSpringLength: 30, defaultElectricalCharge: 100 })
+        });
+
+    var graygrad = $(go.Brush, "Linear", { 0: "#F5F5F5", 1: "#F1F1F1" });
+    var bluegrad = $(go.Brush, "Linear", { 0: "#CDDAF0", 1: "#91ADDD" });
+    var yellowgrad = $(go.Brush, "Linear", { 0: "#FEC901", 1: "#FEA200" });
+    var lavgrad = $(go.Brush, "Linear", { 0: "#EF9EFA", 1: "#A570AD" });
+
+    // define each Node's appearance
+    myDiagram.nodeTemplate =
+      $(go.Node, "Auto",  // the whole node panel
+        { locationSpot: go.Spot.Center },
+        // define the node's outer shape, which will surround the TextBlock
+        // $(go.Shape, "Rectangle",
+        //   { fill: $(go.Brush, "Linear", { 0: "rgb(254, 201, 0)", 1: "rgb(254, 162, 0)" }), stroke: "black" }),
+        $(go.Shape, "RoundedRectangle",
+          { fill: graygrad, stroke: "#D8D8D8" },
+          new go.Binding("fill", "color")),
+        $(go.TextBlock,
+          { font: "bold 10pt helvetica, bold arial, sans-serif", margin: 4 },
+          new go.Binding("text", "text"))
+      );
+
+    // replace the default Link template in the linkTemplateMap
+    myDiagram.linkTemplate =
+      $(go.Link,  go.Link.Orthogonal,// the whole link panel
+        $(go.Shape,  // the link shape
+          { stroke: "black" }),
+        $(go.Shape,  // the arrowhead
+          { toArrow: "standard", stroke: null }),
+        $(go.Panel, "Auto",
+          $(go.Shape,  // the label background, which becomes transparent around the edges
+            { fill: $(go.Brush, "Radial", { 0: "rgb(240, 240, 240)", 0.3: "rgb(240, 240, 240)", 1: "rgba(240, 240, 240, 0)" }),
+              stroke: null }),
+          $(go.TextBlock,  // the label text
+            { textAlign: "center",
+              font: "10pt helvetica, arial, sans-serif",
+              stroke: "#555555",
+              margin: 4 },
+            new go.Binding("text", "text"))
+        )
+      );
+
+
+    // create the model for the concept map
+    /*
+    var nodeDataArray = [
+      { key: 1, text: "Concept Maps" },
+      { key: 2, text: "Organized Knowledge" },
+      { key: 3, text: "Context Dependent", color: bluegrad },
+      { key: 4, text: "Concepts" },
+      { key: 5, text: "Propositions" },
+      { key: 6, text: "Associated Feelings or Affect" },
+      { key: 7, text: "Perceived Regularities" },
+      { key: 8, text: "Labeled" },
+      { key: 9, text: "Hierarchically Structured" },
+      { key: 10, text: "Effective Teaching" },
+      { key: 11, text: "Crosslinks" },
+      { key: 12, text: "Effective Learning" },
+      { key: 13, text: "Events (Happenings)" },
+      { key: 14, text: "Objects (Things)" },
+      { key: 15, text: "Symbols" },
+      { key: 16, text: "Words" },
+      { key: 17, text: "Creativity" },
+      { key: 18, text: "Interrelationships" },
+      { key: 19, text: "Infants" },
+      { key: 20, text: "Different Map Segments" }
+    ];
+    var linkDataArray = [
+      { from: 1, to: 2, text: "represent" },
+      { from: 2, to: 3, text: "is" },
+      { from: 2, to: 4, text: "is" },
+      { from: 2, to: 5, text: "is" },
+      { from: 2, to: 6, text: "includes" },
+      { from: 2, to: 10, text: "necessary\nfor" },
+      { from: 2, to: 12, text: "necessary\nfor" },
+      { from: 4, to: 5, text: "combine\nto form" },
+      { from: 4, to: 6, text: "include" },
+      { from: 4, to: 7, text: "are" },
+      { from: 4, to: 8, text: "are" },
+      { from: 4, to: 9, text: "are" },
+      { from: 5, to: 9, text: "are" },
+      { from: 5, to: 11, text: "may be" },
+      { from: 7, to: 13, text: "in" },
+      { from: 7, to: 14, text: "in" },
+      { from: 7, to: 19, text: "begin\nwith" },
+      { from: 8, to: 15, text: "with" },
+      { from: 8, to: 16, text: "with" },
+      { from: 9, to: 17, text: "aids" },
+      { from: 11, to: 18, text: "show" },
+      { from: 12, to: 19, text: "begins\nwith" },
+      { from: 17, to: 18, text: "needed\nto see" },
+      { from: 18, to: 20, text: "between" }
+    ];
+    */
+    var model = dbScriptModel();
+    nodeDataArray = model.nodes;    
+    var linkDataArray = model.links;
+
+    nodeDataArray.filter(function(x){return x.type == 'method'}).forEach(function(node){node.color=bluegrad;});
+
+    myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+  }
+</script>

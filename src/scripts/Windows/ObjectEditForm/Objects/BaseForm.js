@@ -65,7 +65,7 @@ BaseForm.prototype.showDateProperty = function(name, value, onChange){
     captionColumn.innerHTML = name;
 
     var dateTime = new Date(Date.parse(value));
-    var formattedDate = dateTime.getFullYear() + '-' + pad(dateTime.getMonth()+1, 2) + '-' + pad(dateTime.getDay()+1, 2);
+    var formattedDate = dateTime.getFullYear() + '-' + pad(dateTime.getMonth()+1, 2) + '-' + pad(dateTime.getDate(), 2);
 
     var inputDateElement = document.createElement("input");
     inputDateElement.type = 'date';
